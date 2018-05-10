@@ -1,0 +1,41 @@
+.Navbar {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  display: flex;
+  height: 48px;
+  box-sizing: border-box;
+  align-items: center;
+  padding: 2%;
+  justify-content: space-around;
+
+  background-color: #fff;
+  border-top: 2px solid #b0b0b0;
+  z-index: 10;
+}
+
+.Navbar__button {
+  max-width: 30px;
+  max-height: 30px;
+  fill: #b0b0b0;
+  transition-duration: 0.2s;
+}
+
+.Navbar__partnered-button {
+  fill: #d5d5d5;
+}
+
+.Navbar__partnered-button .back-hand {
+  fill: #b0b0b0;
+}
+
+.Navbar > a.active > .Navbar__button,
+.Navbar__button.active {
+  fill: #8be8aa;
+}
+
+.Navbar > a.active > .Navbar__button .back-hand {
+  fill: #79c274;
+}

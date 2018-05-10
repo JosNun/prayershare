@@ -1,0 +1,31 @@
+.PartnerButton {
+  position: absolute;
+  left: 25%;
+  bottom: 5px;
+  width: 30px;
+  height: 30px;
+
+  fill: #d5d5d5;
+  transform: translate(-50%, 0);
+  transition-duration: 0.2s;
+}
+
+.PartnerButton .back-hand {
+  fill: #b0b0b0;
+}
+
+.PartnerButton--partnered {
+  fill: #8be8aa;
+}
+
+.PartnerButton--partnered .back-hand {
+  fill: #79c274;
+}
+
+.PartnerButton > svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}

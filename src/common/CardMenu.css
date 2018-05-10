@@ -1,0 +1,68 @@
+.CardMenu {
+  position: absolute;
+  right: 10px;
+  bottom: 20px;
+  padding: 0 10px;
+
+  background-color: #fff;
+  border-radius: 100px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transform: translate(0, 50%) scale(0);
+
+  transition-duration: 0.3s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: 75% 50%;
+  z-index: 1;
+}
+
+.CardMenu.open {
+  transform: translate(0, 50%) scale(1);
+  border-radius: 10px;
+  opacity: 1;
+}
+
+.CardMenu__option {
+  position: relative;
+  height: 20px;
+
+  padding: 10px;
+
+  font-size: 18px;
+  text-align: right;
+  vertical-align: middle;
+}
+
+.CardMenu__option:not(:last-child):after {
+  content: '';
+
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  height: 1px;
+  width: 100%;
+
+  background-color: #e1e1e1;
+
+  transform: translate(-50%, 0);
+}
+
+.CardMenu__option--caution {
+  color: #e67373;
+}
+
+.CardMenu__backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  display: block;
+
+  background-color: transparent;
+}
+
+.CardMenu:not(.open) + .CardMenu__backdrop {
+  display: none;
+}
