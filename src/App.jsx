@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import Feed from './feed/Feed';
+import About from './about/About';
+import Profile from './profile/Profile';
 import AppMenu from './common/AppMenu';
 import Navbar from './common/Navbar';
 
@@ -40,6 +42,8 @@ export default class App extends Component {
         <div>
           <Switch>
             <Route path="/feed" component={Feed} />
+            <Route path="/about" component={About} />
+            <Route path="/profile" component={Profile} />
           </Switch>
           <AppMenu
             isMenuOpen={this.state.isMenuOpen}

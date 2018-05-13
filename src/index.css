@@ -1,11 +1,31 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: 'Share', sans-serif;
 
   background-color: #fffae3;
 }
 
-.CardView {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #79c274;
+}
+
+p {
+  line-height: 1.4em;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+a {
+  text-decoration: none;
+  font-weight: 700;
+  color: #79c274;
+}
+
+.MainView {
   padding: 20px;
 }

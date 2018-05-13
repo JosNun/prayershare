@@ -1,9 +1,10 @@
 /* eslint-disable import/no-webpack-loader-syntax */
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import './Navbar.css';
 
-import NewPrayer from './NewPrayerButton.jsx';
+import NewPrayer from './NewPrayerButton';
 
 import PrayerFeedIcon from '-!react-svg-loader!../assets/icons/prayer_feed_icon.svg';
 import PartneredIcon from '-!react-svg-loader!../assets/icons/handshake_icon.svg';
@@ -19,7 +20,7 @@ const Navbar = props => (
       <PartneredIcon className="Navbar__button Navbar__partnered-button" />
     </NavLink>
     <NewPrayer />
-    <NavLink to="/person" activeClassName="active">
+    <NavLink to="/profile" activeClassName="active">
       <PersonIcon className="Navbar__button" />
     </NavLink>
     <HamburgerIcon
@@ -28,5 +29,14 @@ const Navbar = props => (
     />
   </div>
 );
+
+Navbar.propTypes = {
+  isMenuOpen: PropTypes.bool,
+  menuClickHandler: PropTypes.func.isRequired,
+};
+
+Navbar.defaultProps = {
+  isMenuOpen: false,
+};
 
 export default Navbar;
