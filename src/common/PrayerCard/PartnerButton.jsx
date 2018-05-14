@@ -8,23 +8,25 @@ import './PartnerButton.css';
 const PartnerButton = props => (
   <div
     className={
-      props.isPartnered
-        ? 'PartnerButton PartnerButton--partnered'
-        : 'PartnerButton'
+      (props.isPartnered
+        ? 'PartnerButton PartnerButton--partnered '
+        : 'PartnerButton ') + (props.partneredAmount ? ' hasPartners' : '')
     }
     onClick={props.clickHandler}
   >
     <PartnerIcon />
+    <div>{props.partneredAmount ? `x ${props.partneredAmount}` : ''}</div>
   </div>
 );
 
 PartnerButton.propTypes = {
   isPartnered: PropTypes.bool,
-  clickHandler: PropTypes.func.isRequired,
+  clickHandler: PropTypes.func,
 };
 
 PartnerButton.defaultProps = {
   isPartnered: false,
+  clickHandler: () => {},
 };
 
 export default PartnerButton;

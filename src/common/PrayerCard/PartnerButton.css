@@ -29,3 +29,22 @@
   width: 100%;
   height: 100%;
 }
+
+.PartnerButton.hasPartners {
+  width: 60px;
+
+  display: flex;
+  align-items: center;
+
+  color: #79c274;
+  font-size: 18px;
+  white-space: nowrap;
+}
+
+.PartnerButton.hasPartners > svg {
+  position: static;
+}
+
+.PartnerButton.hasPartners > div {
+  margin-left: 5px;
+}
