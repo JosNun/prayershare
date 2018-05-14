@@ -3,13 +3,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import PartnerButton from './PartnerButton';
-import CardMenu from './CardMenu';
 
+import OwnCardMenu from './OwnCardMenu';
 import MenuDots from '-!react-svg-loader!../../assets/icons/menu_dots.svg';
 
 import './PrayerCard.css';
 
-export default class PrayerCard extends Component {
+export default class UserPrayerCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -17,18 +17,9 @@ export default class PrayerCard extends Component {
       isMenuOpen: false,
     };
 
-    this.togglePartner = this.togglePartner.bind(this);
     this.toggleMenu = this.toggleMenu.bind(this);
     this.closeMenu = this.closeMenu.bind(this);
-    this.hidePrayer = this.hidePrayer.bind(this);
-    this.unfollowPoster = this.unfollowPoster.bind(this);
-  }
-
-  togglePartner() {
-    const wasPartnered = this.state.isPartnered;
-    this.setState({
-      isPartnered: !wasPartnered,
-    });
+    this.deletePrayer = this.deletePrayer.bind(this);
   }
 
   toggleMenu() {
@@ -41,17 +32,13 @@ export default class PrayerCard extends Component {
     this.setState({ isMenuOpen: false });
   }
 
-  hidePrayer() {
-    console.log(`Hiding Card`);
-  }
-
-  unfollowPoster() {
-    console.log(`Unfollowing poster`);
+  deletePrayer() {
+    console.log(`Deleting Card`);
   }
 
   render() {
     return (
-      <div className="PrayerCard">
+      <div className="PrayerCard UserPrayerCard">
         {this.props.children}
         <div className="PrayerCard__left-divider" />
         <div className="PrayerCard__middle-divider" />
@@ -59,24 +46,25 @@ export default class PrayerCard extends Component {
         <PartnerButton
           isPartnered={this.state.isPartnered}
           clickHandler={this.togglePartner}
+          partneredAmount={this.props.partnersAmount}
         />
         <MenuDots className="PrayerCard__MenuDots" onClick={this.toggleMenu} />
-        <CardMenu
+        <OwnCardMenu
           isOpen={this.state.isMenuOpen}
           closeHandler={this.closeMenu}
-          hideHandler={this.hidePrayer}
-          unfollowHandler={this.unfollowPoster}
+          deleteHandler={this.deletePrayer}
         />
       </div>
     );
   }
 }
 
-PrayerCard.propTypes = {
+UserPrayerCard.propTypes = {
   children: PropTypes.string,
+  partnersAmount: PropTypes.string,
 };
 
-PrayerCard.defaultProps = {
+UserPrayerCard.defaultProps = {
   children: '',
-  isUsers: false,
+  partnersAmount: null,
 };
