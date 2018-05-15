@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import editIcon from '../assets/icons/edit_icon.svg';
-import aboutIcon from '../assets/icons/about_icon.svg';
+import EditIcon from '../assets/icons/edit_icon.svg';
+import AboutIcon from '../assets/icons/about_icon.svg';
 import './AppMenu.css';
 
 const AppMenu = props => (
@@ -11,11 +11,11 @@ const AppMenu = props => (
     <div className={props.isMenuOpen ? 'AppMenu open' : 'AppMenu'}>
       <Link to="/profile/edit" className="AppMenu__option">
         Edit Profile
-        <img src={editIcon} alt="edit icon" />
+        <EditIcon />
       </Link>
       <Link to="/about" className="AppMenu__option">
         About PrayerShare
-        <img src={aboutIcon} alt="about icon" />
+        <AboutIcon />
       </Link>
     </div>
     <div

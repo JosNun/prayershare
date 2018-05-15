@@ -11,10 +11,10 @@
     "react-svg-loader": "^2.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test --env=jsdom",
+    "eject": "react-app-rewired eject"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
@@ -27,6 +27,8 @@
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-prettier": "^2.6.0",
     "eslint-plugin-react": "^7.7.0",
-    "prettier": "^1.12.1"
+    "prettier": "^1.12.1",
+    "react-app-rewire-svg-react-loader": "github:codebandits/react-app-rewire-svg-react-loader",
+    "react-app-rewired": "^1.5.2"
   }
 }

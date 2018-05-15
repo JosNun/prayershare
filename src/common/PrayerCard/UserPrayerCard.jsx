@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import PartnerButton from './PartnerButton';
 
 import OwnCardMenu from './OwnCardMenu';
-import MenuDots from '-!react-svg-loader!../../assets/icons/menu_dots.svg';
+import MenuDots from '../../assets/icons/menu_dots.svg';
 
 import './PrayerCard.css';
 

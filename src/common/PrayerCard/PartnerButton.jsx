@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 /* eslint-disable import/no-webpack-loader-syntax */
-import PartnerIcon from '-!react-svg-loader!../../assets/icons/handshake_icon.svg';
+import PartnerIcon from '../../assets/icons/handshake_icon.svg';
 
 import './PartnerButton.css';
 

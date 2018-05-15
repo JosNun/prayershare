@@ -23,6 +23,10 @@ export default class App extends Component {
     this.toggleMenu = this.toggleMenu.bind(this);
   }
 
+  componentDidMount() {
+    this.login();
+  }
+
   openMenu() {
     this.setState({
       isMenuOpen: true,
@@ -43,10 +47,6 @@ export default class App extends Component {
     this.setState({
       userId: 32100,
     });
-  }
-
-  componentDidMount() {
-    this.login();
   }
 
   render() {

@@ -4,9 +4,9 @@ import { withRouter, Link } from 'react-router-dom';
 
 import './ProfileHeader.css';
 
-import PrayingHands from '-!react-svg-loader!../assets/icons/praying_hands_icon.svg';
+import PrayingHands from '../assets/icons/praying_hands_icon.svg';
 
-import PersonIcon from '-!react-svg-loader!../assets/icons/person_icon.svg';
+import PersonIcon from '../assets/icons/person_icon.svg';
 
 export default withRouter(props => (
   <div className="ProfileHeader">

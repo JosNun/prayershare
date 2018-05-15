@@ -6,10 +6,10 @@ import './Navbar.css';
 
 import NewPrayer from './NewPrayerButton';
 
-import PrayerFeedIcon from '-!react-svg-loader!../assets/icons/prayer_feed_icon.svg';
-import PartneredIcon from '-!react-svg-loader!../assets/icons/handshake_icon.svg';
-import PersonIcon from '-!react-svg-loader!../assets/icons/person_icon.svg';
-import HamburgerIcon from '-!react-svg-loader!../assets/icons/hamburger_icon.svg';
+import PrayerFeedIcon from '../assets/icons/prayer_feed_icon.svg';
+import PartneredIcon from '../assets/icons/handshake_icon.svg';
+import PersonIcon from '../assets/icons/person_icon.svg';
+import HamburgerIcon from '../assets/icons/hamburger_icon.svg';
 
 const Navbar = props => (
   <div className="Navbar">
