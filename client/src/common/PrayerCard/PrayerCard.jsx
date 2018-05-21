@@ -1,5 +1,3 @@
-/* eslint-disable import/no-webpack-loader-syntax */
-
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import PartnerButton from './PartnerButton';

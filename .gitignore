@@ -8,6 +8,10 @@ client/coverage
 
 # production
 client/build
+dist
+
+# credentials
+config.js
 
 # misc
 .DS_Store

@@ -1,49 +1,59 @@
 import React, { Component } from 'react';
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
 
 import { UserContext } from '../App';
 
 import PrayerCard from '../common/PrayerCard/PrayerCard';
 
+const getPosts = gql`
+  query user($id: Int!) {
+    user(id: $id) {
+      friends {
+        posts {
+          id
+          content
+          owner {
+            id
+          }
+        }
+      }
+    }
+  }
+`;
+
 export default class Feed extends Component {
   constructor(props) {
     super(props);
 
-    const dummyData = [
-      {
-        id: 21321,
-        content: 'This is some example Prayer Card text. Hopefully it’ll work.',
-        ownerId: 2146,
-      },
-      {
-        id: 21641,
-        content:
-          "This is a prayer card owned by the dummy user. You shouldn't see this in the feed",
-        ownerId: 32100,
-      },
-      {
-        id: 82374,
-        content:
-          'This is another card. If you see this, and everything looks fine, that means things are being rendered properly :)',
-        ownerId: 432,
-      },
-    ];
-
-    this.state = {
-      cards: [...dummyData],
-    };
+    this.state = {};
   }
 
   cardsList(id) {
-    const cards = this.state.cards.map(
-      el =>
-        id !== el.ownerId ? (
-          <PrayerCard key={el.id}>{el.content}</PrayerCard>
-        ) : (
-          ''
-        )
-    );
+    if (id) {
+      return (
+        <Query query={getPosts} variables={{ id }}>
+          {({ loading, error, data }) => {
+            if (loading) return <PrayerCard>Loading...</PrayerCard>;
+            if (error) return <p>Uh oh. An error has occured :(</p>;
 
-    return cards;
+            const posts = data.user.friends.reduce(
+              (acc, friend) => acc.concat(friend.posts),
+              []
+            );
+
+            const postCards = posts.map(post => (
+              <PrayerCard key={post.id} owner={post.owner.id}>
+                {post.content}
+              </PrayerCard>
+            ));
+
+            return postCards;
+          }}
+        </Query>
+      );
+    }
+    return <p>Loading...</p>;
   }
 
   render() {
