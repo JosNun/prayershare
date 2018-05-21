@@ -1,0 +1,11 @@
+[build]
+base = "client/"
+publish = "client/build"
+command = "npm run build"
+
+# The following redirect is intended for use with most SPA's that handles routing internally.
+[[redirects]]
+  from = "/*"
+  to = "/"
+  status = 200
+  force = true # Ensure that we always redirect

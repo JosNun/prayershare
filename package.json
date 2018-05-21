@@ -5,9 +5,9 @@
   "main": "lib/server.js",
   "scripts": {
     "babel-node": "babel-node --ignore='client,node_modules'",
-    "build": "babel lib -d dist",
+    "build": "babel lib -d dist --source-maps",
     "client": "node start-client.js",
-    "dev": "nodemon --exec npm run babel-node -- lib/server.js",
+    "dev": "nodemon --exec npm run babel-node -- lib/server.js --source-maps",
     "serve": "node dist/server.js",
     "server": "babel-node lib/server.js",
     "start": "concurrently \"npm run server\" \"npm run client\""
