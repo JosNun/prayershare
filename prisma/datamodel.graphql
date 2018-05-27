@@ -2,7 +2,10 @@ type User {
   id: ID! @unique
   firstName: String!
   lastName: String!
+  email: String
   posts: [Post!]!
+  friends: [User!]! @relation(name: "UserFriends")
+  followers: [User!]! @relation(name: "UserFollowers")
   relations: [UserRelation!]! @relation(name: "UserRelation", onDelete: CASCADE)
 }
 

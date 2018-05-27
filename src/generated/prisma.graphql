@@ -1,5 +1,5 @@
 # source: http://localhost:4466/prayershare/dev
-# timestamp: Sun May 27 2018 14:45:44 GMT-0400 (EDT)
+# timestamp: Sun May 27 2018 19:09:26 GMT-0400 (EDT)
 
 type AggregatePost {
   count: Int!
@@ -380,7 +380,10 @@ type User implements Node {
   id: ID!
   firstName: String!
   lastName: String!
+  email: String
   posts(where: PostWhereInput, orderBy: PostOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Post!]
+  friends(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  followers(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
   relations(where: UserRelationWhereInput, orderBy: UserRelationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserRelation!]
 }
 
@@ -397,8 +400,16 @@ type UserConnection {
 input UserCreateInput {
   firstName: String!
   lastName: String!
+  email: String
   posts: PostCreateManyWithoutAuthorInput
+  friends: UserCreateManyInput
+  followers: UserCreateManyInput
   relations: UserRelationCreateManyWithoutUserInput
+}
+
+input UserCreateManyInput {
+  create: [UserCreateInput!]
+  connect: [UserWhereUniqueInput!]
 }
 
 input UserCreateOneInput {
@@ -419,13 +430,19 @@ input UserCreateOneWithoutRelationsInput {
 input UserCreateWithoutPostsInput {
   firstName: String!
   lastName: String!
+  email: String
+  friends: UserCreateManyInput
+  followers: UserCreateManyInput
   relations: UserRelationCreateManyWithoutUserInput
 }
 
 input UserCreateWithoutRelationsInput {
   firstName: String!
   lastName: String!
+  email: String
   posts: PostCreateManyWithoutAuthorInput
+  friends: UserCreateManyInput
+  followers: UserCreateManyInput
 }
 
 """An edge in a connection."""
@@ -444,6 +461,8 @@ enum UserOrderByInput {
   firstName_DESC
   lastName_ASC
   lastName_DESC
+  email_ASC
+  email_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -454,6 +473,7 @@ type UserPreviousValues {
   id: ID!
   firstName: String!
   lastName: String!
+  email: String
 }
 
 type UserRelation {
@@ -625,15 +645,30 @@ input UserSubscriptionWhereInput {
 input UserUpdateDataInput {
   firstName: String
   lastName: String
+  email: String
   posts: PostUpdateManyWithoutAuthorInput
+  friends: UserUpdateManyInput
+  followers: UserUpdateManyInput
   relations: UserRelationUpdateManyWithoutUserInput
 }
 
 input UserUpdateInput {
   firstName: String
   lastName: String
+  email: String
   posts: PostUpdateManyWithoutAuthorInput
+  friends: UserUpdateManyInput
+  followers: UserUpdateManyInput
   relations: UserRelationUpdateManyWithoutUserInput
+}
+
+input UserUpdateManyInput {
+  create: [UserCreateInput!]
+  connect: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  delete: [UserWhereUniqueInput!]
+  update: [UserUpdateWithWhereUniqueNestedInput!]
+  upsert: [UserUpsertWithWhereUniqueNestedInput!]
 }
 
 input UserUpdateOneInput {
@@ -663,13 +698,24 @@ input UserUpdateOneWithoutRelationsInput {
 input UserUpdateWithoutPostsDataInput {
   firstName: String
   lastName: String
+  email: String
+  friends: UserUpdateManyInput
+  followers: UserUpdateManyInput
   relations: UserRelationUpdateManyWithoutUserInput
 }
 
 input UserUpdateWithoutRelationsDataInput {
   firstName: String
   lastName: String
+  email: String
   posts: PostUpdateManyWithoutAuthorInput
+  friends: UserUpdateManyInput
+  followers: UserUpdateManyInput
+}
+
+input UserUpdateWithWhereUniqueNestedInput {
+  where: UserWhereUniqueInput!
+  data: UserUpdateDataInput!
 }
 
 input UserUpsertNestedInput {
@@ -685,6 +731,12 @@ input UserUpsertWithoutPostsInput {
 input UserUpsertWithoutRelationsInput {
   update: UserUpdateWithoutRelationsDataInput!
   create: UserCreateWithoutRelationsInput!
+}
+
+input UserUpsertWithWhereUniqueNestedInput {
+  where: UserWhereUniqueInput!
+  update: UserUpdateDataInput!
+  create: UserCreateInput!
 }
 
 input UserWhereInput {
@@ -816,9 +868,55 @@ input UserWhereInput {
 
   """All values not ending with the given string."""
   lastName_not_ends_with: String
+  email: String
+
+  """All values that are not equal to given value."""
+  email_not: String
+
+  """All values that are contained in given list."""
+  email_in: [String!]
+
+  """All values that are not contained in given list."""
+  email_not_in: [String!]
+
+  """All values less than the given value."""
+  email_lt: String
+
+  """All values less than or equal the given value."""
+  email_lte: String
+
+  """All values greater than the given value."""
+  email_gt: String
+
+  """All values greater than or equal the given value."""
+  email_gte: String
+
+  """All values containing the given string."""
+  email_contains: String
+
+  """All values not containing the given string."""
+  email_not_contains: String
+
+  """All values starting with the given string."""
+  email_starts_with: String
+
+  """All values not starting with the given string."""
+  email_not_starts_with: String
+
+  """All values ending with the given string."""
+  email_ends_with: String
+
+  """All values not ending with the given string."""
+  email_not_ends_with: String
   posts_every: PostWhereInput
   posts_some: PostWhereInput
   posts_none: PostWhereInput
+  friends_every: UserWhereInput
+  friends_some: UserWhereInput
+  friends_none: UserWhereInput
+  followers_every: UserWhereInput
+  followers_some: UserWhereInput
+  followers_none: UserWhereInput
   relations_every: UserRelationWhereInput
   relations_some: UserRelationWhereInput
   relations_none: UserRelationWhereInput

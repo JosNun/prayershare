@@ -1,4 +1,4 @@
-import { User, Post } from './connectors';
+// import { User, Post } from './connectors';
 
 const resolvers = {
   Query: {
@@ -22,48 +22,88 @@ const resolvers = {
       ),
   },
   Mutation: {
-    createPost: (root, args, context, info) =>
-      context.prisma.createPost({
-        data: {
-          content: args.content,
-          owner: {
-            connect: {
-              id: args.ownerId,
-            },
-          },
-        },
-      }),
-    deletePost: (root, args, context, info) =>
-      context.prisma.mutation.deletePost({
-        data: {
-          id: args.id,
-        },
-      }),
-    addFriend: (root, args, context, info) => {
-      context.prisma.mutation.createUserRelation({
-        data: {
-          user: {
-            connect: {
-              id: args.userId,
-            },
-          },
-          relatesTo: {
-            connect: {
-              id: args.friendId,
-            },
-          },
-          relation: 'FOLLOWING',
-        },
-        info,
-      });
-      return context.prisma.query.user(
+    createUser: (root, args, context, info) => {
+      context.prisma.mutation.createUser(
         {
-          where: {
-            id: args.userId,
+          data: {
+            firstName: args.firstName,
+            lastName: args.lastName,
           },
         },
         info
       );
+    },
+    createPost: (root, args, context, info) =>
+      context.prisma.mutation.createPost(
+        {
+          data: {
+            content: args.content,
+            owner: {
+              connect: {
+                id: args.ownerId,
+              },
+            },
+          },
+        },
+        info
+      ),
+    deletePost: (root, args, context, info) =>
+      context.prisma.mutation.deletePost(
+        {
+          data: {
+            id: args.id,
+          },
+        },
+        info
+      ),
+    addFriend: (root, args, context, info) =>
+      context.prisma.mutation
+        .createUserRelation({
+          data: {
+            user: {
+              connect: {
+                id: args.userId,
+              },
+            },
+            relatesTo: {
+              connect: {
+                id: args.friendId,
+              },
+            },
+            relation: 'FOLLOWING',
+          },
+          info,
+        })
+        .then(() =>
+          context.prisma.query.user(
+            {
+              where: {
+                id: args.userId,
+              },
+            },
+            info
+          )
+        ),
+    removeFriend(root, args, context, info) {
+      // TODO: Check for duplicate entries here
+      return context.prisma.mutation
+        .deleteManyUserRelations({
+          where: {
+            user: {
+              id: args.userId,
+            },
+            relatesTo: {
+              id: args.friendId,
+            },
+          },
+        })
+        .then(() =>
+          context.prisma.query.user({
+            where: {
+              id: args.userId,
+            },
+          })
+        );
     },
   },
 };
