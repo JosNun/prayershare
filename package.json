@@ -2,25 +2,25 @@
   "name": "prayershare",
   "version": "1.0.0",
   "description": "",
-  "main": "lib/server.js",
+  "main": "src/server.js",
   "scripts": {
     "babel-node": "babel-node --ignore='client,node_modules'",
     "build": "babel lib -d dist --source-maps",
     "client": "node start-client.js",
-    "dev": "nodemon --exec npm run babel-node -- lib/server.js --source-maps",
+    "dev": "npm run babel-node -- src/server.js --inspect",
+    "develop": "nodemon --exec npm run babel-node -- src/server.js --source-maps",
     "serve": "node dist/server.js",
-    "server": "babel-node lib/server.js",
+    "server": "babel-node src/server.js",
     "start": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Josiah Nunemaker",
   "license": "MIT",
   "devDependencies": {
-    "@playlyfe/gql": "file:node_modules/@playlyfe/gql",
     "babel-cli": "^6.26.0",
+    "babel-eslint": "^7.2.3",
+    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
     "babel-preset-env": "^1.7.0",
     "concurrently": "^3.5.1",
-    "nodemon": "^1.17.4",
-    "babel-eslint": "^7.2.3",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-config-prettier": "^2.9.0",
@@ -30,6 +30,7 @@
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-prettier": "^2.6.0",
     "eslint-plugin-react": "^7.7.0",
+    "nodemon": "^1.17.4",
     "prettier": "^1.12.1"
   },
   "dependencies": {
@@ -39,7 +40,10 @@
     "express": "^4.16.3",
     "graphql": "^0.13.2",
     "graphql-tools": "^3.0.1",
+    "graphql-yoga": "^1.14.2",
     "mysql2": "^1.5.3",
+    "npm": "^6.1.0",
+    "prisma-binding": "^2.0.1",
     "sequelize": "^4.37.8"
   },
   "babel": {
@@ -52,7 +56,8 @@
           }
         }
       ]
-    ]
+    ],
+    "plugins": ["babel-plugin-syntax-object-rest-spread"]
   },
   "eslintConfig": {
     "extends": ["airbnb", "prettier", "react-app"],

@@ -1,0 +1,17 @@
+# import Post from './generated/prisma.graphql'
+# import User from './generated/prisma.graphql'
+# import UserRelation from './generated/prisma.graphql'
+# import RelationEnum from './generated/prisma.graphql'
+
+type Query {
+  posts(searchString: String): [Post!]!
+  user(id: ID!): User
+  users: [User!]!
+}
+
+type Mutation {
+  createPost(ownerId: ID!, content: String!): Post
+  deletePost(id: ID!): Post
+  signup(name: String!): User!
+  addFriend(userId: ID!, friendId: ID!): User
+}
