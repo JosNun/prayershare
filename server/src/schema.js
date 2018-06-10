@@ -26,6 +26,7 @@ type User {
   firstName: String!
   lastName: String!
   email: String!
+  profilePhoto: String
   posts(
     limit: Int
   ): [Post!]!
@@ -38,28 +39,6 @@ type User {
     last: Int,
     before: String
   ): UserPartnershipsConnection
-}
-
-type UserFriendsConnection {
-  pageInfo: PageInfo!
-  edges: [UserFriendsEdge]
-}
-
-type UserFriendsEdge {
-  cursor: String!
-  node: User!
-  friendedAt: DateTime!
-}
-
-type UserPostsConnection {
-  pageInfo: PageInfo!
-  edges: [UserPostsEdge]
-}
-
-type UserPostsEdge {
-  cursor: String!
-  node: Post
-  postedAt: DateTime!
 }
 
 type UserPartnershipsConnection {
@@ -77,6 +56,7 @@ type Post {
   id: ID!
   owner: ID!
   content: String!
+  partnerCount: Int
   partners: [User!]!
 }
 
