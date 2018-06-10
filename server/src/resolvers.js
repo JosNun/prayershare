@@ -1,9 +1,97 @@
 import bcrypt from 'bcrypt';
 import db from './db';
 
+function generateCursor() {}
+
 const resolvers = {
   Query: {
-    users: (_, args) => {},
+    users: async (_, args) => {
+      const users = await db('users')
+        .column({ id: 'uid' }, 'firstName', 'lastName', 'email', 'profilePhoto')
+        .select();
+
+      return users;
+    },
+    user: async (_, args, ctx) => {
+      let user = await db
+        .column({ id: 'uid' }, 'firstName', 'lastName', 'email', 'profilePhoto')
+        .select()
+        .from('users')
+        .where('uid', args.id);
+
+      [user] = user;
+
+      return user;
+    },
+  },
+
+  User: {
+    posts: async (user, args) => {
+      console.log('getting posts...');
+      console.log(user);
+      console.log(args);
+
+      let posts;
+
+      if (args.limit) {
+        posts = await db
+          .column({ id: 'uid', author: 'userUid' }, 'content')
+          .select()
+          .from('posts')
+          .where({
+            userUid: user.id,
+          })
+          .whereNull('isDeleted')
+          .limit(args.limit);
+      } else {
+        posts = await db
+          .column({ id: 'uid', author: 'userUid' }, 'content')
+          .select()
+          .from('posts')
+          .where({
+            userUid: user.id,
+          })
+          .whereNull('isDeleted');
+      }
+
+      return posts;
+    },
+    friends: async (user, args) => {
+      console.log(`user: ${JSON.stringify(user)}`);
+      console.log(`args: ${JSON.stringify(args)}`);
+      const userUid = user.id;
+
+      let userId = await db('users')
+        .select('id')
+        .where('uid', userUid);
+
+      userId = userId[0].id;
+
+      let friends;
+
+      if (args.limit) {
+        friends = await db('users')
+          .column({ id: 'uid' }, 'firstName', 'lastName', 'profilePhoto')
+          .select()
+          .limit(args.limit)
+          .join('userfriend', query => {
+            query
+              .on('userfriend.friendId', '=', 'users.id')
+              .andOn('userId', '=', userId);
+          });
+      } else {
+        friends = await db('users')
+          .column({ id: 'uid' }, 'firstName', 'lastName', 'profilePhoto')
+          .select()
+          .join('userfriend', query => {
+            query
+              .on('userfriend.friendId', '=', 'users.id')
+              .andOn('userId', '=', userId);
+          });
+      }
+
+      return friends;
+    },
   },
   Mutation: {
     createUser: async (_, args) => {
@@ -31,14 +119,79 @@ const resolvers = {
           email: args.email.toLowerCase(),
           password: passHash,
         })
-        .then(userId =>
-          db
+        .then(userId => {
+          const uid = Buffer.from(`users:${userId}`).toString('base64');
+          return db('users')
+            .where('id', userId)
+            .update('uid', uid)
+            .select(uid)
+            .then(() =>
+              db
+                .select()
+                .from('users')
+                .where('id', userId)
+                .then(userRows => userRows[0])
+            );
+        });
+      return {
+        ...user,
+        id: user.uid,
+      };
+    },
+    createPost: async (_, args) => {
+      const post = await db('posts')
+        .insert({
+          content: args.content,
+          userUid: args.ownerId,
+        })
+        .then(postId => {
+          const uid = Buffer.from(`posts:${postId}`).toString('base64');
+          return db('posts')
+            .where('id', postId)
+            .update('uid', uid)
+            .select(uid)
+            .then(postUid =>
+              db
+                .select()
+                .from('posts')
+                .where('id', postId)
+                .then(postRows => postRows[0])
+            );
+        });
+
+      return {
+        ...post,
+        id: post.uid,
+        owner: post.userUid,
+      };
+    },
+    addFriend: async (_, args) => {
+      let userId = await db('users')
+        .select('id')
+        .where('uid', args.userId);
+      let friendId = await db('users')
+        .select('id')
+        .where('uid', args.friendId);
+      userId = userId[0].id;
+      friendId = friendId[0].id;
+      const friend = await db('UserFriend')
+        .insert({
+          userId,
+          friendId,
+        })
+        .then(row =>
+          db('users')
+            .column({ id: 'uid' }, 'firstName', 'lastName', 'profilePhoto')
             .select()
             .from('users')
-            .where('id', userId)
-            .then(userRows => userRows[0])
+            .where({
+              uid: args.friendId,
+            })
         );
-      return user;
+
+      console.log(friend);
+
+      return friend[0];
     },
   },
 };

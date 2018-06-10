@@ -17,6 +17,7 @@ graphQLServer.use('/someurl', (req, res) => {
 
 graphQLServer.listen(GRAPHQL_PORT, () =>
   console.log(
-    `GraphiQL is now running on http://localhost:${GRAPHQL_PORT}/graphiql`
+    `GraphiQL is now running on http://localhost:${GRAPHQL_PORT}/graphiql\n` +
+      `Oh, and Altair is running on http://localhost:${GRAPHQL_PORT}/altair`
   )
 );

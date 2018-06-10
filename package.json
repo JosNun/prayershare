@@ -8,7 +8,8 @@
     "build": "babel lib -d dist --source-maps",
     "client": "node start-client.js",
     "dev": "npm run babel-node -- server/src/server.js --inspect",
-    "develop": "nodemon --exec npm run babel-node -- server/src/server.js --source-maps",
+    "develop":
+      "nodemon --exec npm run babel-node -- server/src/server.js --source-maps",
     "serve": "node dist/server.js",
     "server": "babel-node server/src/server.js",
     "start": "concurrently \"npm run server\" \"npm run client\""
@@ -58,38 +59,23 @@
         }
       ]
     ],
-    "plugins": [
-      "babel-plugin-syntax-object-rest-spread"
-    ]
+    "plugins": ["babel-plugin-syntax-object-rest-spread"]
   },
   "eslintConfig": {
-    "extends": [
-      "airbnb",
-      "prettier",
-      "react-app"
-    ],
-    "plugins": [
-      "prettier"
-    ],
+    "extends": ["airbnb", "prettier", "react-app"],
+    "plugins": ["prettier"],
     "rules": {
       "class-methods-use-this": 0,
       "import/no-named-as-default": 0,
       "import/no-named-as-default-member": 0,
-      "prettier/prettier": [
-        "error"
-      ],
-      "jsx-a11y/href-no-hash": [
-        0
-      ],
+      "no-labels": 0,
+      "prettier/prettier": ["error"],
+      "jsx-a11y/href-no-hash": [0],
       "jsx-a11y/anchor-is-valid": [
         "error",
         {
-          "components": [
-            "Link"
-          ],
-          "specialLink": [
-            "to"
-          ]
+          "components": ["Link"],
+          "specialLink": ["to"]
         }
       ]
     }

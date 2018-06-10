@@ -5,7 +5,6 @@ const typeDefs = `#graphql
 type Query {
   users: [User!]!
   user(id: ID!): User
-  posts(id: ID): [Post!]!
 }
 
 type Mutation {
@@ -27,18 +26,12 @@ type User {
   firstName: String!
   lastName: String!
   email: String!
-  postsConnection(
-    first: Int,
-    after: String,
-    last: Int,
-    before: String
-  ): UserPostsConnection
-  friendsConnection(
-   first: Int,
-   after: String,
-   last: Int,
-   before: String 
-  ): UserFriendsConnection
+  posts(
+    limit: Int
+  ): [Post!]!
+  friends(
+    limit: Int
+  ): [User!]!
   partnershipsConnection(
     first: Int,
     after: String,
@@ -88,6 +81,7 @@ type Post {
 }
 
 type PageInfo {
+  count: Int
   hasNextPage: Boolean
 }
 
