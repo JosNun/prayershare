@@ -12,8 +12,8 @@ class UserFriends extends Component {
 
   render() {
     const GET_USER_FRIENDS = gql`
-      query user($userId: ID!) {
-        user(id: $userId) {
+      query user {
+        user {
           friends {
             id
             firstName
@@ -27,7 +27,7 @@ class UserFriends extends Component {
     return (
       <div className="Profile-Card-Container">
         <FriendSearchCard onClick={this.unfollowHandler} />
-        <Query query={GET_USER_FRIENDS} variables={{ userId: 'dXNlcnM6Njg=' }}>
+        <Query query={GET_USER_FRIENDS}>
           {({ loading, error, data }) => {
             if (loading) return <h2>Loading...</h2>;
             if (error) return <h3>Uh oh, an error has occured</h3>;

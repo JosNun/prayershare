@@ -11,8 +11,8 @@ import PersonIcon from '../assets/icons/person_icon.svg';
 
 export default withRouter(props => {
   const GET_USER_INFO = gql`
-    query user($userId: ID!) {
-      user(id: $userId) {
+    query user {
+      user {
         firstName
         profilePhoto
       }
@@ -21,7 +21,7 @@ export default withRouter(props => {
 
   return (
     <div className="ProfileHeader">
-      <Query query={GET_USER_INFO} variables={{ userId: 'dXNlcnM6Njg=' }}>
+      <Query query={GET_USER_INFO}>
         {({ loading, error, data }) => {
           if (loading) return <h2>Loading...</h2>;
           if (error) return <h2>Error has occured :(</h2>;

@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import db from './db';
-
-function generateCursor() {}
 
 const resolvers = {
   Query: {
@@ -17,7 +16,7 @@ const resolvers = {
         .column({ id: 'uid' }, 'firstName', 'lastName', 'email', 'profilePhoto')
         .select()
         .from('users')
-        .where('uid', args.id);
+        .where('uid', ctx.userId);
 
       [user] = user;
 
@@ -26,10 +25,11 @@ const resolvers = {
   },
 
   User: {
-    posts: async (user, args) => {
+    posts: async (user, args, context) => {
       console.log('getting posts...');
       console.log(user);
       console.log(args);
+      console.log(context);
 
       let posts;
 
@@ -39,7 +39,7 @@ const resolvers = {
           .select()
           .from('posts')
           .where({
-            userUid: user.id,
+            userUid: context.userId,
           })
           .whereNull('isDeleted')
           .limit(args.limit);
@@ -49,17 +49,17 @@ const resolvers = {
           .select()
           .from('posts')
           .where({
-            userUid: user.id,
+            userUid: context.userId,
           })
           .whereNull('isDeleted');
       }
 
       return posts;
     },
-    friends: async (user, args) => {
+    friends: async (user, args, context) => {
       console.log(`user: ${JSON.stringify(user)}`);
       console.log(`args: ${JSON.stringify(args)}`);
-      const userUid = user.id;
+      const userUid = context.userId;
 
       let userId = await db('users')
         .select('id')
@@ -133,9 +133,57 @@ const resolvers = {
                 .then(userRows => userRows[0])
             );
         });
+
+      const token = await new Promise((resolve, reject) => {
+        jwt.sign(
+          { sub: user.uid },
+          process.env.JWT_SECRET_KEY,
+          (err, newToken) => {
+            resolve(newToken);
+          }
+        );
+      });
+
       return {
         ...user,
         id: user.uid,
+        jwt: token,
+      };
+    },
+    login: async (_, args, context) => {
+      let user = await db('users')
+        .select('uid', 'firstName', 'password')
+        .where('email', args.email);
+
+      if (user.length === 0) {
+        return new Error("Account doesn't exist");
+      }
+
+      [user] = user;
+
+      const passwordMatches = await bcrypt.compare(
+        args.password,
+        user.password
+      );
+
+      if (!passwordMatches) {
+        return new Error('Invalid password');
+      }
+
+      const token = await new Promise((resolve, reject) => {
+        jwt.sign(
+          { sub: user.uid },
+          process.env.JWT_SECRET_KEY,
+          (err, newToken) => {
+            resolve(newToken);
+          }
+        );
+      });
+
+      return {
+        id: user.uid,
+        firstName: user.firstName,
+        jwt: token,
       };
     },
     createPost: async (_, args) => {

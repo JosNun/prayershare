@@ -4,11 +4,12 @@ import resolvers from './resolvers';
 const typeDefs = `#graphql
 type Query {
   users: [User!]!
-  user(id: ID!): User
+  user: User
 }
 
 type Mutation {
   createUser(firstName: String!, lastName: String!, email: String!, password: String!): User
+  login(email: String!, password: String!): User
   deleteUser(userId: ID!): User
   
   addFriend(userId: ID!, friendId: ID!): User
@@ -27,6 +28,7 @@ type User {
   lastName: String!
   email: String!
   profilePhoto: String
+  jwt: String
   posts(
     limit: Int
   ): [Post!]!

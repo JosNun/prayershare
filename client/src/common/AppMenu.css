@@ -29,7 +29,12 @@
 
   color: #79c274;
   font-size: 16px;
+  font-weight: 700;
   text-decoration: none;
+}
+
+.AppMenu__option--red {
+  color: #e67373;
 }
 
 .AppMenu__option:not(:last-child):after {

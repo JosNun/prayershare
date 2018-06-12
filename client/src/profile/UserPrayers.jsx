@@ -6,8 +6,8 @@ import UserPrayerCard from '../common/PrayerCard/UserPrayerCard';
 
 export default () => {
   const GET_USER_POSTS = gql`
-    query user($userId: ID!) {
-      user(id: $userId) {
+    query user {
+      user {
         posts {
           content
           partnerCount
@@ -18,7 +18,7 @@ export default () => {
   `;
 
   return (
-    <Query query={GET_USER_POSTS} variables={{ userId: 'dXNlcnM6Njg=' }}>
+    <Query query={GET_USER_POSTS}>
       {({ loading, error, data }) => {
         if (loading) return <h2>Loading...</h2>;
         if (error) return <h3>Uh oh, an error has occured :(</h3>;
