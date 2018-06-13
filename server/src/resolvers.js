@@ -5,9 +5,18 @@ import db from './db';
 const resolvers = {
   Query: {
     users: async (_, args) => {
+      const filter = args.filter ? args.filter : '';
+      const limit = args.limit ? args.limit : 10;
+
       const users = await db('users')
         .column({ id: 'uid' }, 'firstName', 'lastName', 'email', 'profilePhoto')
-        .select();
+        .select()
+        .where(query => {
+          query
+            .where('firstName', 'like', `%${filter}%`)
+            .orWhere('lastName', 'like', `%${filter}%`);
+        })
+        .limit(limit);
 
       return users;
     },
@@ -213,10 +222,10 @@ const resolvers = {
         owner: post.userUid,
       };
     },
-    addFriend: async (_, args) => {
+    addFriend: async (_, args, context) => {
       let userId = await db('users')
         .select('id')
-        .where('uid', args.userId);
+        .where('uid', context.userId);
       let friendId = await db('users')
         .select('id')
         .where('uid', args.friendId);
@@ -240,6 +249,33 @@ const resolvers = {
       console.log(friend);
 
       return friend[0];
+    },
+
+    removeFriend: async (_, args, context) => {
+      const [{ id: userId }] = await db('users')
+        .select('id')
+        .where('uid', context.userId);
+      const [{ id: friendId }] = await db('users')
+        .select('id')
+        .where('uid', args.friendId);
+
+      const unfriended = await db('UserFriend')
+        .where({
+          userId,
+          friendId,
+        })
+        .del()
+        .then(row =>
+          db('users')
+            .column({ id: 'uid' }, 'firstName', 'lastName', 'profilePhoto')
+            .select()
+            .from('users')
+            .where({
+              uid: args.friendId,
+            })
+        );
+
+      return unfriended[0];
     },
   },
 };

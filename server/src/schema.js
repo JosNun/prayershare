@@ -3,7 +3,7 @@ import resolvers from './resolvers';
 
 const typeDefs = `#graphql
 type Query {
-  users: [User!]!
+  users(filter: String, limit: Int): [User!]!
   user: User
 }
 
@@ -12,8 +12,8 @@ type Mutation {
   login(email: String!, password: String!): User
   deleteUser(userId: ID!): User
   
-  addFriend(userId: ID!, friendId: ID!): User
-  removeFriend(userId: ID!, friendId: ID!): User
+  addFriend(friendId: ID!): User
+  removeFriend(friendId: ID!): User
   
   addPartnership(postId: ID!, userId: ID!): Post
   removePartnership(postId: ID!, userID: ID!): Post
