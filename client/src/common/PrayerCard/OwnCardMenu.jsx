@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './CardMenu.css';
 
-const CardMenu = props => (
+const OwnCardMenu = props => (
   <div>
     <div
       className={props.isOpen ? 'CardMenu open' : 'CardMenu'}
@@ -24,14 +24,14 @@ const CardMenu = props => (
   </div>
 );
 
-CardMenu.propTypes = {
+OwnCardMenu.propTypes = {
   isOpen: PropTypes.bool,
   closeHandler: PropTypes.func.isRequired,
   deleteHandler: PropTypes.func.isRequired,
 };
 
-CardMenu.defaultProps = {
+OwnCardMenu.defaultProps = {
   isOpen: false,
 };
 
-export default CardMenu;
+export default OwnCardMenu;

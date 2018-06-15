@@ -61,6 +61,47 @@ class UserFriends extends Component {
     this.unfollowHandler = this.unfollowHandler.bind(this);
   }
 
+  componentDidMount() {
+    this.getFriends();
+  }
+
+  onUsersFetched = users => {
+    const markedUsers = this.markUserFriends(users, this.state.friends);
+
+    this.setState({
+      users: markedUsers,
+      isShowingFriends: false,
+    });
+  };
+
+  onFriendsFetched = friends => {
+    const markedFriends = friends.map(friend => ({
+      ...friend,
+      isFriend: true,
+    }));
+
+    this.setState({
+      friends: markedFriends,
+      users: markedFriends,
+      isShowingFriends: true,
+    });
+  };
+
+  getFriends(client) {
+    const apolloClient = client || this.client;
+
+    apolloClient
+      .query({
+        query: GET_USER_FRIENDS,
+        fetchPolicy: 'network-only',
+      })
+      .then(({ data: newData, loading: isLoading, error: isErr }) => {
+        if (isErr) return <p>error</p>;
+        if (isLoading) return <p>loading...</p>;
+        this.onFriendsFetched(newData.user.friends);
+      });
+  }
+
   markUserFriends(users, friends) {
     if (!users || !friends) return users;
     const markedUsers = users.map(user => {
@@ -77,49 +118,6 @@ class UserFriends extends Component {
       return user;
     });
     return markedUsers;
-  }
-
-  onUsersFetched = users => {
-    const markedUsers = this.markUserFriends(users, this.state.friends);
-
-    this.setState({
-      users: markedUsers,
-      isShowingFriends: false,
-    });
-  };
-
-  componentDidMount() {
-    this.getFriends();
-  }
-
-  onFriendsFetched = friends => {
-    const markedFriends = friends.map(friend => ({
-      ...friend,
-      isFriend: true,
-    }));
-
-    console.log('friends Fetched');
-    this.setState({
-      friends: markedFriends,
-      users: markedFriends,
-      isShowingFriends: true,
-    });
-  };
-
-  getFriends(client) {
-    const apolloClient = client || this.client;
-    console.log('fetching friends');
-
-    apolloClient
-      .query({
-        query: GET_USER_FRIENDS,
-        fetchPolicy: 'network-only',
-      })
-      .then(({ data: newData, loading: isLoading, error: isErr }) => {
-        if (isErr) return <p>error</p>;
-        if (isLoading) return <p>loading...</p>;
-        this.onFriendsFetched(newData.user.friends);
-      });
   }
 
   addFriendHandler(client, friendId) {
@@ -146,8 +144,6 @@ class UserFriends extends Component {
       return item;
     });
 
-    console.log(users);
-
     this.setState({
       users,
     });
@@ -169,10 +165,7 @@ class UserFriends extends Component {
       return item;
     });
 
-    console.log(users);
-
     this.setState({ users });
-    console.log('removing friend');
   }
 
   searchUsers(client, filter) {

@@ -4,7 +4,8 @@ import resolvers from './resolvers';
 const typeDefs = `#graphql
 type Query {
   users(filter: String, limit: Int): [User!]!
-  user: User
+  user(offset: Int, limit: Int): User
+  getPostFeed(offset: Int, limit: Int): [Post!]!
 }
 
 type Mutation {
@@ -18,8 +19,8 @@ type Mutation {
   addPartnership(postId: ID!, userId: ID!): Post
   removePartnership(postId: ID!, userID: ID!): Post
   
-  createPost(ownerId: ID!, content: String!): Post
-  deletePost(id: ID!): Post
+  createPost(content: String!): Post
+  deletePost(postId: ID!): Post
 }
 
 type User {

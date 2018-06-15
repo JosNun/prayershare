@@ -1,23 +1,19 @@
 import React, { Component } from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
+import AuthRoute from '../common/utils/AuthRoute';
 
-import { UserContext } from '../App';
+import CreatePost from '../common/CreatePost';
 
 import PrayerCard from '../common/PrayerCard/PrayerCard';
+import UserPrayerCard from '../common/PrayerCard/UserPrayerCard';
 
 const getPosts = gql`
-  query user($id: Int!) {
-    user(id: $id) {
-      friends {
-        posts {
-          id
-          content
-          owner {
-            id
-          }
-        }
-      }
+  query getPostFeed {
+    getPostFeed {
+      id
+      content
+      owner
     }
   }
 `;
@@ -29,38 +25,52 @@ export default class Feed extends Component {
     this.state = {};
   }
 
-  cardsList(id) {
-    if (id) {
-      return (
-        <Query query={getPosts} variables={{ id }}>
-          {({ loading, error, data }) => {
-            if (loading) return <PrayerCard>Loading...</PrayerCard>;
-            if (error) return <p>Uh oh. An error has occured :(</p>;
+  cardsList() {
+    const userId = localStorage.getItem('userId');
+    return (
+      <Query query={getPosts} fetchPolicy="cache-and-network">
+        {({ loading, error, data }) => {
+          if (loading) return <PrayerCard>Loading...</PrayerCard>;
+          if (error) return <p>Uh oh. An error has occured :(</p>;
 
-            const posts = data.user.friends.reduce(
-              (acc, friend) => acc.concat(friend.posts),
-              []
+          const posts = data.getPostFeed;
+
+          if (posts.length === 0) {
+            return (
+              <div>
+                <h3>No posts in your feed!</h3>
+                <p>Try adding some friends!</p>
+              </div>
             );
+          }
 
-            const postCards = posts.map(post => (
-              <PrayerCard key={post.id} owner={post.owner.id}>
+          const postCards = posts.map(post => {
+            if (post.owner === userId) {
+              return (
+                <UserPrayerCard key={post.id} id={post.id} owner={post.owner}>
+                  {post.content}
+                </UserPrayerCard>
+              );
+            }
+            return (
+              <PrayerCard key={post.id} id={post.id} owner={post.owner}>
                 {post.content}
               </PrayerCard>
-            ));
+            );
+          });
 
-            return postCards;
-          }}
-        </Query>
-      );
-    }
-    return <p>Loading...</p>;
+          return postCards;
+        }}
+      </Query>
+    );
   }
 
   render() {
     return (
-      <UserContext.Consumer>
-        {userId => <div className="MainView">{this.cardsList(userId)}</div>}
-      </UserContext.Consumer>
+      <div>
+        <div className="MainView">{this.cardsList()}</div>
+        <AuthRoute exact path="/feed/create-post" component={CreatePost} />
+      </div>
     );
   }
 }

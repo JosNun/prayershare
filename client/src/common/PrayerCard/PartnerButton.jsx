@@ -15,7 +15,11 @@ const PartnerButton = props => (
     onClick={props.clickHandler}
   >
     <PartnerIcon />
-    <div>{props.partneredAmount ? `x ${props.partneredAmount}` : ''}</div>
+    <div>
+      {props.partneredAmount || props.partneredAmount === 0
+        ? `x ${props.partneredAmount}`
+        : ''}
+    </div>
   </div>
 );
 

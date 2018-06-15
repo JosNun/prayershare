@@ -13,8 +13,6 @@ import Navbar from './common/Navbar';
 import Signup from './login/Signup';
 import Login from './login/Login';
 
-export const UserContext = React.createContext('user');
-
 const client = new ApolloClient({
   uri: 'http://localhost:3000/graphql',
   request: async operation => {
@@ -41,10 +39,6 @@ export default class App extends Component {
     this.toggleMenu = this.toggleMenu.bind(this);
   }
 
-  componentDidMount() {
-    this.login();
-  }
-
   openMenu() {
     this.setState({
       isMenuOpen: true,
@@ -65,39 +59,31 @@ export default class App extends Component {
     }
   }
 
-  login() {
-    this.setState({
-      userId: 3,
-    });
-  }
-
   render() {
     return (
-      <UserContext.Provider value={this.state.userId}>
-        <ApolloProvider client={client}>
-          <BrowserRouter>
-            <div>
-              <Switch>
-                <Route path="/signup" component={Signup} />
-                <Route path="/login" component={Login} />
+      <ApolloProvider client={client}>
+        <BrowserRouter>
+          <div>
+            <Switch>
+              <Route path="/signup" component={Signup} />
+              <Route path="/login" component={Login} />
 
-                <Redirect exact path="/" to="/feed" />
-                <AuthRoute path="/feed" component={Feed} />
-                <AuthRoute path="/about" component={About} />
-                <AuthRoute path="/profile" component={Profile} />
-              </Switch>
-              <AppMenu
-                isMenuOpen={this.state.isMenuOpen}
-                closeHandler={this.closeMenu}
-              />
-              <Navbar
-                menuClickHandler={this.toggleMenu}
-                isMenuOpen={this.state.isMenuOpen}
-              />
-            </div>
-          </BrowserRouter>
-        </ApolloProvider>
-      </UserContext.Provider>
+              <Redirect exact path="/" to="/feed" />
+              <AuthRoute path="/feed" component={Feed} />
+              <AuthRoute path="/about" component={About} />
+              <AuthRoute path="/profile" component={Profile} />
+            </Switch>
+            <AppMenu
+              isMenuOpen={this.state.isMenuOpen}
+              closeHandler={this.closeMenu}
+            />
+            <Navbar
+              menuClickHandler={this.toggleMenu}
+              isMenuOpen={this.state.isMenuOpen}
+            />
+          </div>
+        </BrowserRouter>
+      </ApolloProvider>
     );
   }
 }

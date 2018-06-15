@@ -31,6 +31,37 @@ const resolvers = {
 
       return user;
     },
+    getPostFeed: async (_, args, ctx) => {
+      const { userId } = ctx;
+      console.log(args);
+      const posts = await db
+        .from('users as friends')
+        .join('userFriend', 'friends.id', 'userfriend.friendId')
+        .leftOuterJoin('users as user', 'user.id', 'userFriend.userId')
+        .join('posts', 'friends.uid', 'posts.userUid')
+        .select(
+          'posts.content',
+          'posts.userUid as owner',
+          'posts.uid as id',
+          'posts.createdAt'
+        )
+        .where('user.uid', userId)
+        .unionAll(query => {
+          query
+            .select(
+              'posts.content',
+              'posts.userUid as owner',
+              'posts.uid as id',
+              'posts.createdAt'
+            )
+            .from('posts')
+            .where('userUid', userId);
+        })
+        .limit(10)
+        .orderBy('createdAt', 'desc');
+
+      return posts;
+    },
   },
 
   User: {
@@ -195,11 +226,11 @@ const resolvers = {
         jwt: token,
       };
     },
-    createPost: async (_, args) => {
+    createPost: async (_, args, ctx) => {
       const post = await db('posts')
         .insert({
           content: args.content,
-          userUid: args.ownerId,
+          userUid: ctx.userId,
         })
         .then(postId => {
           const uid = Buffer.from(`posts:${postId}`).toString('base64');
@@ -276,6 +307,24 @@ const resolvers = {
         );
 
       return unfriended[0];
+    },
+    deletePost: async (_, args, context) => {
+      const { postId } = args;
+      const [post] = await db('posts')
+        .select('userUid as id')
+        .where('uid', postId);
+
+      console.log(post);
+      if (post.id !== context.userId) {
+        return new Error('User is not authorized to perform this action');
+      }
+
+      await db('posts')
+        .where('uid', postId)
+        .del();
+      console.log(`post: ${post}`);
+
+      return post;
     },
   },
 };
