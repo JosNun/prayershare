@@ -43,6 +43,7 @@
 
 .PartnerButton.hasPartners > svg {
   position: static;
+  width: 30px;
 }
 
 .PartnerButton.hasPartners > div {

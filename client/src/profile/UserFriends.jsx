@@ -105,7 +105,7 @@ class UserFriends extends Component {
   markUserFriends(users, friends) {
     if (!users || !friends) return users;
     const markedUsers = users.map(user => {
-      let isFriend = friends.find(friend => {
+      const isFriend = friends.find(friend => {
         if (user.id === friend.id) return true;
         return false;
       });
@@ -130,9 +130,7 @@ class UserFriends extends Component {
       },
     });
 
-    const index = this.state.users.findIndex(el => {
-      return el.id === friendId;
-    });
+    const index = this.state.users.findIndex(el => el.id === friendId);
 
     const users = this.state.users.map((item, i) => {
       if (i === index) {
@@ -154,9 +152,7 @@ class UserFriends extends Component {
 
     apolloClient.mutate({ mutation: REMOVE_FRIEND, variables: { friendId } });
 
-    const index = this.state.users.findIndex(el => {
-      return el.id === friendId;
-    });
+    const index = this.state.users.findIndex(el => el.id === friendId);
 
     const users = this.state.users.map((item, i) => {
       if (i === index) {
@@ -210,8 +206,7 @@ class UserFriends extends Component {
                   ''
                 )}
                 {this.state.users &&
-                  this.state.users.map(friend => {
-                    return (
+                  this.state.users.map(friend => (
                       <FriendCard
                         id={friend.id}
                         name={`${friend.firstName} ${friend.lastName}`}
@@ -232,8 +227,7 @@ class UserFriends extends Component {
                           }
                         }}
                       />
-                    );
-                  })}
+                    ))}
               </div>
             );
           }}

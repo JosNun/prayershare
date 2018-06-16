@@ -31,7 +31,6 @@ export default class App extends Component {
 
     this.state = {
       isMenuOpen: false,
-      userId: null,
     };
 
     this.openMenu = this.openMenu.bind(this);

@@ -6,9 +6,8 @@ import AuthRoute from '../common/utils/AuthRoute';
 import CreatePost from '../common/CreatePost';
 
 import PrayerCard from '../common/PrayerCard/PrayerCard';
-import UserPrayerCard from '../common/PrayerCard/UserPrayerCard';
 
-const getPosts = gql`
+export const GET_POSTS = gql`
   query getPostFeed {
     getPostFeed {
       id
@@ -18,6 +17,29 @@ const getPosts = gql`
   }
 `;
 
+const buildPostCards = (posts, refetch) => {
+  const userId = localStorage.getItem('userId');
+
+  return posts.map(post => {
+    let isOwn = false;
+    if (post.owner === userId) {
+      isOwn = true;
+    }
+    return (
+      <PrayerCard
+        key={post.id}
+        id={post.id}
+        owner={post.owner}
+        isOwnCard={isOwn}
+        partneredAmount={0}
+        postModifiedHandler={refetch}
+      >
+        {post.content}
+      </PrayerCard>
+    );
+  });
+};
+
 export default class Feed extends Component {
   constructor(props) {
     super(props);
@@ -26,10 +48,9 @@ export default class Feed extends Component {
   }
 
   cardsList() {
-    const userId = localStorage.getItem('userId');
     return (
-      <Query query={getPosts} fetchPolicy="cache-and-network">
-        {({ loading, error, data }) => {
+      <Query query={GET_POSTS} fetchPolicy="cache-first">
+        {({ loading, error, data, refetch }) => {
           if (loading) return <PrayerCard>Loading...</PrayerCard>;
           if (error) return <p>Uh oh. An error has occured :(</p>;
 
@@ -44,20 +65,7 @@ export default class Feed extends Component {
             );
           }
 
-          const postCards = posts.map(post => {
-            if (post.owner === userId) {
-              return (
-                <UserPrayerCard key={post.id} id={post.id} owner={post.owner}>
-                  {post.content}
-                </UserPrayerCard>
-              );
-            }
-            return (
-              <PrayerCard key={post.id} id={post.id} owner={post.owner}>
-                {post.content}
-              </PrayerCard>
-            );
-          });
+          const postCards = buildPostCards(posts, refetch);
 
           return postCards;
         }}

@@ -33,7 +33,6 @@ const resolvers = {
     },
     getPostFeed: async (_, args, ctx) => {
       const { userId } = ctx;
-      console.log(args);
       const posts = await db
         .from('users as friends')
         .join('userFriend', 'friends.id', 'userfriend.friendId')
@@ -66,11 +65,6 @@ const resolvers = {
 
   User: {
     posts: async (user, args, context) => {
-      console.log('getting posts...');
-      console.log(user);
-      console.log(args);
-      console.log(context);
-
       let posts;
 
       if (args.limit) {
@@ -97,8 +91,6 @@ const resolvers = {
       return posts;
     },
     friends: async (user, args, context) => {
-      console.log(`user: ${JSON.stringify(user)}`);
-      console.log(`args: ${JSON.stringify(args)}`);
       const userUid = context.userId;
 
       let userId = await db('users')
@@ -277,8 +269,6 @@ const resolvers = {
             })
         );
 
-      console.log(friend);
-
       return friend[0];
     },
 
@@ -311,18 +301,16 @@ const resolvers = {
     deletePost: async (_, args, context) => {
       const { postId } = args;
       const [post] = await db('posts')
-        .select('userUid as id')
+        .select('userUid', 'uid as id')
         .where('uid', postId);
 
-      console.log(post);
-      if (post.id !== context.userId) {
+      if (post.userUid !== context.userId) {
         return new Error('User is not authorized to perform this action');
       }
 
       await db('posts')
         .where('uid', postId)
         .del();
-      console.log(`post: ${post}`);
 
       return post;
     },

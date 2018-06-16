@@ -2,7 +2,7 @@ import React from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import UserPrayerCard from '../common/PrayerCard/UserPrayerCard';
+import PrayerCard from '../common/PrayerCard/PrayerCard';
 
 export default () => {
   const GET_USER_POSTS = gql`
@@ -26,13 +26,14 @@ export default () => {
         return (
           <div className="Profile-Card-Container">
             {data.user.posts.map(post => (
-              <UserPrayerCard
-                partnersAmount={post.partnerCount || '0'}
+              <PrayerCard
+                partnersAmount={post.partnerCount || 0}
                 key={post.id}
                 id={post.id}
+                isOwnCard
               >
                 {post.content}
-              </UserPrayerCard>
+              </PrayerCard>
             ))}
           </div>
         );

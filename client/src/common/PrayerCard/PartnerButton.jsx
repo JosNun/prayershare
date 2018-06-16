@@ -10,7 +10,10 @@ const PartnerButton = props => (
     className={
       (props.isPartnered
         ? 'PartnerButton PartnerButton--partnered '
-        : 'PartnerButton ') + (props.partneredAmount ? ' hasPartners' : '')
+        : 'PartnerButton ') +
+      (props.partneredAmount || props.partneredAmount === 0
+        ? ' hasPartners'
+        : '')
     }
     onClick={props.clickHandler}
   >
