@@ -4,7 +4,7 @@ import db from './db';
 
 const resolvers = {
   Query: {
-    users: async (_, args) => {
+    users: async (_, args, ctx) => {
       const filter = args.filter ? args.filter : '';
       const limit = args.limit ? args.limit : 10;
 
@@ -16,6 +16,7 @@ const resolvers = {
             .where('firstName', 'like', `%${filter}%`)
             .orWhere('lastName', 'like', `%${filter}%`);
         })
+        .andWhere('uid', '!=', ctx.userId)
         .limit(limit);
 
       return users;
@@ -42,7 +43,16 @@ const resolvers = {
           'posts.content',
           'posts.userUid as owner',
           'posts.uid as id',
-          'posts.createdAt'
+          'posts.createdAt',
+          db.raw(
+            'exists(select 1 from userPartnership where :partnershipUser: = :userId: and :partnershipPost: = :postId:) as isPartnered',
+            {
+              partnershipUser: 'userPartnership.userId',
+              userId: 'user.id',
+              partnershipPost: 'userPartnership.postId',
+              postId: 'posts.id',
+            }
+          )
         )
         .where('user.uid', userId)
         .unionAll(query => {
@@ -51,7 +61,8 @@ const resolvers = {
               'posts.content',
               'posts.userUid as owner',
               'posts.uid as id',
-              'posts.createdAt'
+              'posts.createdAt',
+              db.raw('0 as isPartnered')
             )
             .from('posts')
             .where('userUid', userId);
@@ -85,7 +96,8 @@ const resolvers = {
           .where({
             userUid: context.userId,
           })
-          .whereNull('isDeleted');
+          .whereNull('isDeleted')
+          .orderBy('createdAt', 'desc');
       }
 
       return posts;
@@ -123,6 +135,23 @@ const resolvers = {
       }
 
       return friends;
+    },
+    partneredPosts: async (_, args, ctx) => {
+      const limit = args.limit || 10;
+
+      const partnered = await db('posts')
+        .select(
+          'posts.uid as id',
+          'posts.content',
+          'posts.userUid as owner',
+          db.raw('1 as isPartnered')
+        )
+        .leftOuterJoin('UserPartnership', 'posts.id', 'UserPartnership.postId')
+        .leftOuterJoin('users', 'users.id', 'UserPartnership.userId')
+        .where('users.uid', ctx.userId)
+        .limit(limit);
+
+      return partnered;
     },
   },
   Mutation: {
@@ -313,6 +342,53 @@ const resolvers = {
         .del();
 
       return post;
+    },
+
+    addPartnership: async (_, args, ctx) => {
+      const postUid = args.postId;
+      const userUid = ctx.userId;
+
+      const ids = await db('users')
+        .select('users.id as userId', 'posts.id as postId')
+        .join('posts')
+        .where('users.uid', userUid)
+        .andWhere('posts.uid', postUid);
+
+      const [{ userId }] = ids;
+      const [{ postId }] = ids;
+
+      const partnership = await db('UserPartnership').insert({
+        userId,
+        postId,
+      });
+
+      return {
+        id: postUid,
+        isPartnered: true,
+      };
+    },
+    removePartnership: async (_, args, ctx) => {
+      const postUid = args.postId;
+      const userUid = ctx.userId;
+
+      const ids = await db('users')
+        .select('users.id as userId', 'posts.id as postId')
+        .join('posts')
+        .where('users.uid', userUid)
+        .andWhere('posts.uid', postUid);
+
+      const [{ userId }] = ids;
+      const [{ postId }] = ids;
+
+      const partnership = await db('UserPartnership')
+        .del()
+        .where('userId', userId)
+        .andWhere('postId', postId);
+
+      return {
+        id: postUid,
+        isPartnered: false,
+      };
     },
   },
 };

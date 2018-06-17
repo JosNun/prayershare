@@ -16,8 +16,8 @@ type Mutation {
   addFriend(friendId: ID!): User
   removeFriend(friendId: ID!): User
   
-  addPartnership(postId: ID!, userId: ID!): Post
-  removePartnership(postId: ID!, userID: ID!): Post
+  addPartnership(postId: ID!): Post
+  removePartnership(postId: ID!): Post
   
   createPost(content: String!): Post
   deletePost(postId: ID!): Post
@@ -34,25 +34,13 @@ type User {
     limit: Int
   ): [Post!]!
   friends(
-    limit: Int
+    limit: Int,
+    offset: Int
   ): [User!]!
-  partnershipsConnection(
-    first: Int,
-    after: String,
-    last: Int,
-    before: String
-  ): UserPartnershipsConnection
-}
-
-type UserPartnershipsConnection {
-  pageInfo: PageInfo!
-  edges: [UserPartnershipsEdge]
-}
-
-type UserPartnershipsEdge {
-  cursor: String!
-  node: Post
-  partneredAt: DateTime!
+  partneredPosts(
+    limit: Int,
+    offset: Int
+  ): [Post!]!
 }
 
 type Post {
@@ -61,15 +49,7 @@ type Post {
   content: String!
   partnerCount: Int
   partners: [User!]!
-}
-
-type PageInfo {
-  count: Int
-  hasNextPage: Boolean
-}
-
-type DateTime {
-  utc: String
+  isPartnered: Boolean
 }
 `;
 

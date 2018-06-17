@@ -13,6 +13,8 @@ export const GET_POSTS = gql`
       id
       content
       owner
+      partnerCount
+      isPartnered
     }
   }
 `;
@@ -31,6 +33,7 @@ const buildPostCards = (posts, refetch) => {
         id={post.id}
         owner={post.owner}
         isOwnCard={isOwn}
+        isPartnered={post.isPartnered}
         partneredAmount={0}
         postModifiedHandler={refetch}
       >
@@ -49,7 +52,7 @@ export default class Feed extends Component {
 
   cardsList() {
     return (
-      <Query query={GET_POSTS} fetchPolicy="cache-first">
+      <Query query={GET_POSTS} fetchPolicy="cache-and-network">
         {({ loading, error, data, refetch }) => {
           if (loading) return <PrayerCard>Loading...</PrayerCard>;
           if (error) return <p>Uh oh. An error has occured :(</p>;

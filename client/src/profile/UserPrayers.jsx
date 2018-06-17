@@ -18,8 +18,8 @@ export default () => {
   `;
 
   return (
-    <Query query={GET_USER_POSTS}>
-      {({ loading, error, data }) => {
+    <Query query={GET_USER_POSTS} fetchPolicy="cache-and-network">
+      {({ loading, error, data, refetch }) => {
         if (loading) return <h2>Loading...</h2>;
         if (error) return <h3>Uh oh, an error has occured :(</h3>;
 
@@ -31,6 +31,7 @@ export default () => {
                 key={post.id}
                 id={post.id}
                 isOwnCard
+                postModifiedHandler={refetch}
               >
                 {post.content}
               </PrayerCard>

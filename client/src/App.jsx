@@ -1,3 +1,8 @@
+/*
+  TODO: Email confirmation on signup
+  TODO: Cache user posts
+*/
+
 import React, { Component } from 'react';
 import { BrowserRouter, Switch, Redirect, Route } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
@@ -6,6 +11,7 @@ import ApolloClient from 'apollo-boost';
 import AuthRoute from './common/utils/AuthRoute';
 
 import Feed from './feed/Feed';
+import PartneredFeed from './partnered/PartneredFeed';
 import About from './about/About';
 import Profile from './profile/Profile';
 import AppMenu from './common/AppMenu';
@@ -69,6 +75,7 @@ export default class App extends Component {
 
               <Redirect exact path="/" to="/feed" />
               <AuthRoute path="/feed" component={Feed} />
+              <AuthRoute path="/partnered" component={PartneredFeed} />
               <AuthRoute path="/about" component={About} />
               <AuthRoute path="/profile" component={Profile} />
             </Switch>

@@ -18,12 +18,18 @@ const DELETE_POST = gql`
   }
 `;
 
-const GET_POSTS = gql`
-  query getPostFeed {
-    getPostFeed {
+const ADD_PARTNERSHIP = gql`
+  mutation addPartnership($postId: ID!) {
+    addPartnership(postId: $postId) {
       id
-      content
-      owner
+    }
+  }
+`;
+
+const REMOVE_PARTNERSHIP = gql`
+  mutation removePartnership($postId: ID!) {
+    removePartnership(postId: $postId) {
+      id
     }
   }
 `;
@@ -32,7 +38,7 @@ export default class PrayerCard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isPartnered: false,
+      isPartnered: this.props.isPartnered,
       isMenuOpen: false,
     };
 
@@ -44,7 +50,13 @@ export default class PrayerCard extends Component {
     this.unfollowPoster = this.unfollowPoster.bind(this);
   }
 
-  togglePartner() {
+  togglePartner(apolloClient, id, isPartnered) {
+    apolloClient.mutate({
+      mutation: !isPartnered ? ADD_PARTNERSHIP : REMOVE_PARTNERSHIP,
+      variables: {
+        postId: id,
+      },
+    });
     const wasPartnered = this.state.isPartnered;
     this.setState({
       isPartnered: !wasPartnered,
@@ -75,20 +87,20 @@ export default class PrayerCard extends Component {
       variables: {
         postId: id,
       },
-      // refetchQueries: [`getPostFeed`],
-      update: (cache, { data: { deletePost } }) => {
-        const { getPostFeed: posts } = cache.readQuery({
-          query: GET_POSTS,
-        });
+      refetchQueries: [`getPostFeed`, `user`],
+      // update: (cache, { data: { deletePost } }) => {
+      //   const { getPostFeed: posts } = cache.readQuery({
+      //     query: GET_POSTS,
+      //   });
 
-        const updatedPosts = posts.filter(e => e.id !== deletePost.id);
-        cache.writeQuery({
-          query: GET_POSTS,
-          data: {
-            getPostFeed: updatedPosts,
-          },
-        });
-      },
+      //   const updatedPosts = posts.filter(e => e.id !== deletePost.id);
+      //   cache.writeQuery({
+      //     query: GET_POSTS,
+      //     data: {
+      //       getPostFeed: updatedPosts,
+      //     },
+      //   });
+      // },
     });
 
     // this.props.postModifiedHandler();
@@ -106,7 +118,16 @@ export default class PrayerCard extends Component {
             <div className="PrayerCard__right-divider" />
             <PartnerButton
               isPartnered={this.state.isPartnered}
-              clickHandler={!this.props.isOwnCard ? this.togglePartner : null}
+              clickHandler={
+                !this.props.isOwnCard
+                  ? this.togglePartner.bind(
+                      this,
+                      client,
+                      this.props.id,
+                      this.state.isPartnered
+                    )
+                  : null
+              }
               partneredAmount={
                 this.props.isOwnCard && (this.props.partneredAmount || 0)
               }
