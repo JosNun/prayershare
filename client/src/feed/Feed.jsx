@@ -34,7 +34,7 @@ const buildPostCards = (posts, refetch) => {
         owner={post.owner}
         isOwnCard={isOwn}
         isPartnered={post.isPartnered}
-        partneredAmount={0}
+        partneredAmount={post.partnerCount}
         postModifiedHandler={refetch}
       >
         {post.content}

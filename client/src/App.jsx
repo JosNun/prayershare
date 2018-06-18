@@ -1,6 +1,13 @@
 /*
   TODO: Email confirmation on signup
   TODO: Cache user posts
+  TODO: Fix visual bug when unfollowing user
+  TODO: Google Login
+  TODO: Facebook Login
+  TODO: Facebook friend search
+  TODO: Avatars
+  TODO: Profile editing
+  TODO: animate ALL THE THINGS!
 */
 
 import React, { Component } from 'react';

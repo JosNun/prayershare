@@ -73,7 +73,6 @@ const resolvers = {
       return posts;
     },
   },
-
   User: {
     posts: async (user, args, context) => {
       let posts;
@@ -152,6 +151,22 @@ const resolvers = {
         .limit(limit);
 
       return partnered;
+    },
+  },
+  Post: {
+    partnerCount: async (post, args, ctx) => {
+      let [partnerCount] = await db('posts')
+        .select(
+          db.raw(
+            '(select count(*) from userPArtnership where userPartnership.postId = posts.id) as amount'
+          )
+        )
+        .join('userPartnership', 'userPArtnership.postId', 'posts.id')
+        .where('posts.uid', post.id);
+
+      partnerCount = partnerCount ? partnerCount.amount : 0;
+
+      return partnerCount;
     },
   },
   Mutation: {

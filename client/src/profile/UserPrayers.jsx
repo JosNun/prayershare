@@ -27,7 +27,7 @@ export default () => {
           <div className="Profile-Card-Container">
             {data.user.posts.map(post => (
               <PrayerCard
-                partnersAmount={post.partnerCount || 0}
+                partneredAmount={post.partnerCount}
                 key={post.id}
                 id={post.id}
                 isOwnCard

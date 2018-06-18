@@ -48,7 +48,6 @@ type Post {
   owner: ID!
   content: String!
   partnerCount: Int
-  partners: [User!]!
   isPartnered: Boolean
 }
 `;

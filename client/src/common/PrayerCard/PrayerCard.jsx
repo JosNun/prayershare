@@ -129,7 +129,7 @@ export default class PrayerCard extends Component {
                   : null
               }
               partneredAmount={
-                this.props.isOwnCard && (this.props.partneredAmount || 0)
+                this.props.isOwnCard && this.props.partneredAmount
               }
             />
             <MenuDots
