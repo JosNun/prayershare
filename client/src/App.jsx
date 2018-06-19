@@ -1,8 +1,9 @@
 /*
   // TODO: Avatars
   // TODO: Google Login
+  // TODO: Unfollow Prayer card owner
+  TODO: Hide prayer card
   TODO: Loading animations
-  TODO: Prayer card actions
   TODO: Email confirmation on signup
   TODO: Cache user posts
   TODO: Password reset
@@ -13,7 +14,9 @@
   TODO: Profile editing
   TODO: Load more on scroll
   TODO: Clear cache on logout
-  TODO: animate ALL THE THINGS!
+  TODO: Remove partnerships for unfriended people
+  TODO: Animate ALL THE THINGS!
+  TODO: Unfollow confirmation dialog
 */
 
 import React, { Component } from 'react';

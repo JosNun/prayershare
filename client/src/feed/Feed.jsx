@@ -31,7 +31,7 @@ const buildPostCards = (posts, refetch) => {
       <PrayerCard
         key={post.id}
         id={post.id}
-        owner={post.owner}
+        ownerId={post.owner}
         isOwnCard={isOwn}
         isPartnered={post.isPartnered}
         partneredAmount={post.partnerCount}

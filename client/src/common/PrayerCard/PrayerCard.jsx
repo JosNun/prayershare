@@ -34,6 +34,14 @@ const REMOVE_PARTNERSHIP = gql`
   }
 `;
 
+const REMOVE_FRIEND = gql`
+  mutation removeFriend($friendId: ID!) {
+    removeFriend(friendId: $friendId) {
+      id
+    }
+  }
+`;
+
 export default class PrayerCard extends Component {
   constructor(props) {
     super(props);
@@ -77,7 +85,14 @@ export default class PrayerCard extends Component {
     console.log(`Hiding Card`);
   }
 
-  unfollowPoster() {
+  unfollowPoster(client, ownerId) {
+    client.mutate({
+      mutation: REMOVE_FRIEND,
+      variables: {
+        friendId: ownerId,
+      },
+      refetchQueries: ['getPostFeed', 'user'],
+    });
     console.log(`Unfollowing poster`);
   }
 
@@ -141,7 +156,11 @@ export default class PrayerCard extends Component {
               isOwnCard={this.props.isOwnCard}
               closeHandler={this.closeMenu}
               hideHandler={this.hidePrayer}
-              unfollowHandler={this.unfollowPoster}
+              unfollowHandler={this.unfollowPoster.bind(
+                this,
+                client,
+                this.props.ownerId
+              )}
               deleteHandler={this.deletePrayer.bind(
                 this,
                 client,
