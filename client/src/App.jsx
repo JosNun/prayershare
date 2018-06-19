@@ -27,7 +27,7 @@ import Signup from './login/Signup';
 import Login from './login/Login';
 
 const client = new ApolloClient({
-  uri: 'http://localhost:3000/graphql',
+  uri: 'https://localhost:3000/graphql',
   request: async operation => {
     const token = await localStorage.getItem('token');
     operation.setContext({
