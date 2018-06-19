@@ -29,7 +29,7 @@ export default withRouter(props => {
             <div className="ProfileHeader__user-info">
               <div className="ProfileHeader__profile-photo">
                 <img
-                  src={data.profilePhoto || '/images/icons/avatar.png'}
+                  src={data.user.profilePhoto || '/images/icons/avatar.png'}
                   alt="profile"
                 />
                 {/* Dummy profile photo atm */}

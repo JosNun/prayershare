@@ -12,6 +12,7 @@ dist
 
 # credentials
 config.js
+*.pem
 
 # misc
 .DS_Store

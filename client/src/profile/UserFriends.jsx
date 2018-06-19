@@ -207,27 +207,27 @@ class UserFriends extends Component {
                 )}
                 {this.state.users &&
                   this.state.users.map(friend => (
-                      <FriendCard
-                        id={friend.id}
-                        name={`${friend.firstName} ${friend.lastName}`}
-                        avatarUrl={friend.profilePhoto}
-                        isFriend={friend.isFriend}
-                        key={friend.id}
-                        apolloClient={client}
-                        unfollowHandler={e => {
-                          this.unfollowHandler(client, friend.id);
-                          if (this.state.isShowingFriends) {
-                            this.getFriends();
-                          }
-                        }}
-                        addFriendHandler={e => {
-                          this.addFriendHandler(client, friend.id);
-                          if (this.state.isShowingFriends) {
-                            this.getFriends();
-                          }
-                        }}
-                      />
-                    ))}
+                    <FriendCard
+                      id={friend.id}
+                      name={`${friend.firstName} ${friend.lastName}`}
+                      avatarUrl={friend.profilePhoto}
+                      isFriend={friend.isFriend}
+                      key={friend.id}
+                      apolloClient={client}
+                      unfollowHandler={e => {
+                        this.unfollowHandler(client, friend.id);
+                        if (this.state.isShowingFriends) {
+                          this.getFriends();
+                        }
+                      }}
+                      addFriendHandler={e => {
+                        this.addFriendHandler(client, friend.id);
+                        if (this.state.isShowingFriends) {
+                          this.getFriends();
+                        }
+                      }}
+                    />
+                  ))}
               </div>
             );
           }}

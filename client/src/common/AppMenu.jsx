@@ -7,20 +7,22 @@ import AboutIcon from '../assets/icons/about_icon.svg';
 import './AppMenu.css';
 
 const AppMenu = withRouter(props => {
-  const logout = () => {
+  const logout = async () => {
     console.log('Logging out');
-    console.log(this);
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    /* eslint-disable-next-line no-undef */
-    const auth2 = window.gapi.auth2.getAuthInstance();
-    auth2
-      .signOut()
-      .then(() => {
+
+    const auth2 = await window.gapi.auth2.getAuthInstance();
+    if (auth2) {
+      auth2.signOut().then(() => {
         console.log('user signed out');
-      })
-      .catch(console.error);
-    props.history.push('/login');
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        props.history.push('/login');
+      });
+    } else {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
+      props.history.push('/login');
+    }
   };
 
   return (

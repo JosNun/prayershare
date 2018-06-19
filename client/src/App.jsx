@@ -1,12 +1,18 @@
 /*
+  // TODO: Avatars
+  // TODO: Google Login
+  TODO: Loading animations
+  TODO: Prayer card actions
   TODO: Email confirmation on signup
   TODO: Cache user posts
+  TODO: Password reset
   TODO: Fix visual bug when unfollowing user
-  TODO: Google Login
+  TODO: Fix logout bug
   TODO: Facebook Login
   TODO: Facebook friend search
-  TODO: Avatars
   TODO: Profile editing
+  TODO: Load more on scroll
+  TODO: Clear cache on logout
   TODO: animate ALL THE THINGS!
 */
 
@@ -69,6 +75,12 @@ export default class App extends Component {
     } else {
       this.openMenu();
     }
+  }
+
+  componentDidMount() {
+    window.addEventListener('load', () => {
+      window.gapi.load('auth2');
+    });
   }
 
   render() {
