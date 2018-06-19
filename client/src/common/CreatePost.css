@@ -1,0 +1,32 @@
+.Create-Post-Modal__input {
+  border: 1px solid #e1e1e1;
+  border-radius: 10px;
+}
+
+textarea.Create-Post-Modal__input {
+  width: 100%;
+  min-height: 25vh;
+
+  box-sizing: border-box;
+  padding: 5px;
+  margin-bottom: 10px;
+  resize: none;
+}
+
+.Create-Post-Modal__button {
+  height: 30px;
+  padding: 5px 15px;
+
+  background-color: #79c274;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+}
+
+.Create-Post-Modal__button[type='submit'] {
+  float: right;
+}
+
+.Create-Post-Modal__button--warning {
+  background-color: #e67373;
+}
