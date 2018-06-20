@@ -19,13 +19,6 @@ const CardMenu = props => (
       ) : (
         <div>
           <div
-            className="CardMenu__option"
-            onClick={props.hideHandler}
-            role="button"
-          >
-            Hide Post
-          </div>
-          <div
             className="CardMenu__option CardMenu__option--caution"
             onClick={props.unfollowHandler}
             role="button"
@@ -45,7 +38,6 @@ const CardMenu = props => (
 
 CardMenu.propTypes = {
   isOpen: PropTypes.bool,
-  hideHandler: PropTypes.func.isRequired,
   unfollowHandler: PropTypes.func.isRequired,
   closeHandler: PropTypes.func.isRequired,
 };

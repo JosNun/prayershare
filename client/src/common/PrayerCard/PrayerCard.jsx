@@ -52,7 +52,6 @@ export default class PrayerCard extends Component {
 
     this.closeMenu = this.closeMenu.bind(this);
     this.deletePrayer = this.deletePrayer.bind(this);
-    this.hidePrayer = this.hidePrayer.bind(this);
     this.toggleMenu = this.toggleMenu.bind(this);
     this.togglePartner = this.togglePartner.bind(this);
     this.unfollowPoster = this.unfollowPoster.bind(this);
@@ -79,10 +78,6 @@ export default class PrayerCard extends Component {
 
   closeMenu() {
     this.setState({ isMenuOpen: false });
-  }
-
-  hidePrayer() {
-    console.log(`Hiding Card`);
   }
 
   unfollowPoster(client, ownerId) {
@@ -155,7 +150,6 @@ export default class PrayerCard extends Component {
               isOpen={this.state.isMenuOpen}
               isOwnCard={this.props.isOwnCard}
               closeHandler={this.closeMenu}
-              hideHandler={this.hidePrayer}
               unfollowHandler={this.unfollowPoster.bind(
                 this,
                 client,

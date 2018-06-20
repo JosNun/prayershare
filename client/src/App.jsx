@@ -9,6 +9,7 @@
   TODO: Password reset
   TODO: Fix visual bug when unfollowing user
   TODO: Fix logout bug
+  TODO: Move JWT to cookies
   TODO: Facebook Login
   TODO: Facebook friend search
   TODO: Profile editing
