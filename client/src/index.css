@@ -6,6 +6,10 @@ body {
   background-color: #fffae3;
 }
 
+#root {
+  overflow: hidden;
+}
+
 h1,
 h2,
 h3,
@@ -29,8 +33,26 @@ a {
 input,
 button {
   font-family: 'Share', sans-serif;
+  height: 30px;
+  padding: 5px 15px;
+  width: 100%;
+
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+button.colored,
+input.colored {
+  background-color: #79c274;
+  color: #fff;
 }
 
 .MainView {
+  max-height: calc(100vh - 90px);
+  overflow: scroll;
   padding: 20px 20px 48px 20px;
+}
+.Routed-Container {
+  overflow: hidden;
 }

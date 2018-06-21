@@ -2,21 +2,25 @@
   // TODO: Avatars
   // TODO: Google Login
   // TODO: Unfollow Prayer card owner
-  TODO: Hide prayer card
-  TODO: Loading animations
-  TODO: Email confirmation on signup
-  TODO: Cache user posts
+  // TODO: Hide prayer card
+  // TODO: Email confirmation on signup
+  TODO: Redirect to account creation confirmation after signup
   TODO: Password reset
+  TODO: Revise about text
+  TODO: Display errors to client (login)
+  TODO: Load more on scroll
+  TODO: Loading animations
+  TODO: Cache user posts
   TODO: Fix visual bug when unfollowing user
   TODO: Fix logout bug
   TODO: Move JWT to cookies
   TODO: Facebook Login
   TODO: Facebook friend search
   TODO: Profile editing
-  TODO: Load more on scroll
   TODO: Clear cache on logout
   TODO: Remove partnerships for unfriended people
   TODO: Animate ALL THE THINGS!
+  TODO: Offline support
   TODO: Unfollow confirmation dialog
 */
 
@@ -37,7 +41,7 @@ import Signup from './login/Signup';
 import Login from './login/Login';
 
 const client = new ApolloClient({
-  uri: 'https://localhost:3000/graphql',
+  uri: process.env.GRAPHQL_ENDPOINT,
   request: async operation => {
     const token = await localStorage.getItem('token');
     operation.setContext({
@@ -91,15 +95,15 @@ export default class App extends Component {
     return (
       <ApolloProvider client={client}>
         <BrowserRouter>
-          <div>
+          <div className="Routed-container">
             <Switch>
               <Route path="/signup" component={Signup} />
               <Route path="/login" component={Login} />
+              <Route path="/about" component={About} />
 
               <Redirect exact path="/" to="/feed" />
               <AuthRoute path="/feed" component={Feed} />
               <AuthRoute path="/partnered" component={PartneredFeed} />
-              <AuthRoute path="/about" component={About} />
               <AuthRoute path="/profile" component={Profile} />
             </Switch>
             <AppMenu

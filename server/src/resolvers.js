@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import db from './db';
+import mailer from './mailer';
 
 const resolvers = {
   Query: {
@@ -34,6 +35,9 @@ const resolvers = {
     },
     getPostFeed: async (_, args, ctx) => {
       const { userId } = ctx;
+      const limit = args.limit || 10;
+      const offset = args.offset || 0;
+
       const posts = await db
         .from('users as friends')
         .join('userFriend', 'friends.id', 'userfriend.friendId')
@@ -67,7 +71,8 @@ const resolvers = {
             .from('posts')
             .where('userUid', userId);
         })
-        .limit(10)
+        .limit(limit)
+        .offset(offset)
         .orderBy('createdAt', 'desc');
 
       return posts;
@@ -170,7 +175,7 @@ const resolvers = {
     },
   },
   Mutation: {
-    createUser: async (_, args) => {
+    createUser: async (_, args, ctx) => {
       const rows = await db('users')
         .where({
           email: args.email.toLowerCase(),
@@ -200,7 +205,7 @@ const resolvers = {
           return db('users')
             .where('id', userId)
             .update('uid', uid)
-            .select(uid)
+            .select('uid', 'email', 'firstName')
             .then(() =>
               db
                 .select()
@@ -210,25 +215,41 @@ const resolvers = {
             );
         });
 
-      const token = await new Promise((resolve, reject) => {
-        jwt.sign(
-          { sub: user.uid },
-          process.env.JWT_SECRET_KEY,
-          (err, newToken) => {
-            resolve(newToken);
-          }
-        );
+      const host = ctx.req.get('host');
+      const confirmUrl = `https://${host}/verify/${user.uid}`;
+      const plainTextMail = `Hey ${
+        user.firstName
+      }, Please confirm your PrayerShare account at this link: ${confirmUrl}`;
+      const htmlMail = `Hey ${
+        user.firstName
+      },<br>Please confirm your PrayerShare account at this link: <a href="${confirmUrl}">${confirmUrl}</a>`;
+
+      mailer.sendMail({
+        to: user.email,
+        subject: 'Confirm your account',
+        text: plainTextMail,
+        html: htmlMail,
       });
+
+      // const token = await new Promise((resolve, reject) => {
+      //   jwt.sign(
+      //     { sub: user.uid },
+      //     process.env.JWT_SECRET_KEY,
+      //     (err, newToken) => {
+      //       resolve(newToken);
+      //     }
+      //   );
+      // });
 
       return {
         ...user,
         id: user.uid,
-        jwt: token,
+        // jwt: token,
       };
     },
     login: async (_, args, context) => {
       let user = await db('users')
-        .select('uid', 'firstName', 'password')
+        .select('uid', 'firstName', 'password', 'verified')
         .where('email', args.email);
 
       if (user.length === 0) {
@@ -236,6 +257,10 @@ const resolvers = {
       }
 
       [user] = user;
+
+      if (!user.verified) {
+        return new Error("Account hasn't been verified. Check your email!");
+      }
 
       const passwordMatches = await bcrypt.compare(
         args.password,

@@ -8,8 +8,8 @@ import CreatePost from '../common/CreatePost';
 import PrayerCard from '../common/PrayerCard/PrayerCard';
 
 export const GET_POSTS = gql`
-  query getPostFeed {
-    getPostFeed {
+  query getPostFeed($limit: Int, $offset: Int) {
+    getPostFeed(limit: $limit, offset: $offset) {
       id
       content
       owner
@@ -48,29 +48,69 @@ export default class Feed extends Component {
     super(props);
 
     this.state = {};
+    this.shouldFetchMore = false;
   }
 
   cardsList() {
     return (
-      <Query query={GET_POSTS} fetchPolicy="cache-and-network">
-        {({ loading, error, data, refetch }) => {
-          if (loading) return <PrayerCard>Loading...</PrayerCard>;
-          if (error) return <p>Uh oh. An error has occured :(</p>;
+      <Query
+        query={GET_POSTS}
+        variables={{
+          limit: 10,
+          offset: 0,
+        }}
+        fetchPolicy="cache-and-network"
+      >
+        {({ loading, error, data, refetch, fetchMore }) => {
+          if (data && Object.keys(data).length !== 0) {
+            const posts = data.getPostFeed;
 
-          const posts = data.getPostFeed;
+            if (posts.length === 0) {
+              return (
+                <div>
+                  <h3>No posts in your feed!</h3>
+                  <p>Try adding some friends!</p>
+                </div>
+              );
+            }
 
-          if (posts.length === 0) {
+            const postCards = buildPostCards(posts, refetch);
+
             return (
-              <div>
-                <h3>No posts in your feed!</h3>
-                <p>Try adding some friends!</p>
-              </div>
+              <React.Fragment>
+                {postCards}
+                <button
+                  className="colored"
+                  onClick={() => {
+                    console.log(`fetching more`);
+                    fetchMore({
+                      variables: {
+                        offset: posts.length,
+                        limit: 10,
+                      },
+                      updateQuery: (prev, { fetchMoreResult }) => {
+                        if (!fetchMoreResult) return prev;
+
+                        const newPosts = Object.assign({}, prev, {
+                          getPostFeed: [
+                            ...prev.getPostFeed,
+                            ...fetchMoreResult.getPostFeed,
+                          ],
+                        });
+
+                        return newPosts;
+                      },
+                    });
+                  }}
+                >
+                  Load More
+                </button>
+              </React.Fragment>
             );
           }
 
-          const postCards = buildPostCards(posts, refetch);
-
-          return postCards;
+          if (loading) return <PrayerCard>Loading...</PrayerCard>;
+          return <p>Uh oh. An error has occured :(</p>;
         }}
       </Query>
     );

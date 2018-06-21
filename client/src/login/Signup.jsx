@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import { Link, Redirect, withRouter } from 'react-router-dom';
+import Modal from '../common/Modal';
 import './Signup.css';
 
 const CREATE_USER = gql`
@@ -19,7 +20,6 @@ const CREATE_USER = gql`
     ) {
       id
       firstName
-      jwt
     }
   }
 `;
@@ -61,10 +61,18 @@ class Signup extends Component {
             ) {
               return <Redirect to="/feed" />;
             }
-            if (data) {
-              localStorage.setItem('token', data.login.jwt);
-              localStorage.setItem('userId', data.login.id);
-              return <Redirect to="/feed" />;
+            if (data && data.createUser) {
+              return (
+                <Modal>
+                  <h3>
+                    {data.createUser.firstName}, your account has been created!
+                  </h3>
+                  <p>
+                    Go check your email to verify it, then{' '}
+                    <Link to="/login">login</Link>
+                  </p>
+                </Modal>
+              );
             }
             return (
               <div className="Login-Form">

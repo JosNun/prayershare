@@ -2,15 +2,21 @@ import express from 'express';
 import jwt from 'express-jwt';
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 import { altairExpress } from 'altair-express-middleware';
+import cors from 'cors';
 import bodyParser from 'body-parser';
 import https from 'https';
 import fs from 'fs';
+import path from 'path';
+
 import schema from './schema';
 import googleAuth from './routes/googleAuth';
+import verifyAccount from './routes/verifyAccount';
 
 const GRAPHQL_PORT = process.env.PORT;
 
 const graphQLServer = express();
+
+graphQLServer.use(cors());
 
 graphQLServer.use(
   '/graphql',
@@ -32,17 +38,24 @@ graphQLServer.use(
   bodyParser.json(),
   graphqlExpress(req => ({
     schema,
-    context: req.context,
+    context: { ...req.context, req },
   }))
 );
 graphQLServer.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 graphQLServer.use('/altair', altairExpress({ endpointURL: '/graphql' }));
+graphQLServer.use('/verify/:id?', verifyAccount);
 graphQLServer.use(
   '/google-auth',
   bodyParser.urlencoded({
     extended: false,
   }),
   googleAuth
+);
+graphQLServer.use(
+  express.static(path.join(__dirname, '../..', 'client/build'))
+);
+graphQLServer.get('*', (req, res) =>
+  res.sendFile(path.join(__dirname, '../..', 'client/build/index.html'))
 );
 
 const httpsOptions = {
