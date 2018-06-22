@@ -11,6 +11,7 @@ import path from 'path';
 import schema from './schema';
 import googleAuth from './routes/googleAuth';
 import verifyAccount from './routes/verifyAccount';
+import { resetPassword, generateResetHash } from './routes/resetPassword';
 
 const GRAPHQL_PORT = process.env.PORT;
 
@@ -44,6 +45,8 @@ graphQLServer.use(
 graphQLServer.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 graphQLServer.use('/altair', altairExpress({ endpointURL: '/graphql' }));
 graphQLServer.use('/verify/:id?', verifyAccount);
+graphQLServer.post('/reset/:email?', generateResetHash);
+graphQLServer.post('/password-reset/:hash/:password', resetPassword);
 graphQLServer.use(
   '/google-auth',
   bodyParser.urlencoded({

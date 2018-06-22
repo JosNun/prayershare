@@ -103,6 +103,9 @@ export default class extends Component {
                 <p>or</p>
 
                 <Link to="/signup">Create an account</Link>
+                <h6>
+                  <Link to="/forgot">Forgot your password?</Link>
+                </h6>
               </div>
             );
           }}

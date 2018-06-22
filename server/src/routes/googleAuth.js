@@ -52,6 +52,7 @@ const handleGAuth = async (req, res) => {
         lastName: userInfo.lastName,
         profilePhoto: userInfo.profilePhoto,
         email: userInfo.email.toLowerCase(),
+        verified: 1,
       })
       .then(userId => {
         const uid = Buffer.from(`users:${userId}`).toString('base64');

@@ -4,7 +4,7 @@
   // TODO: Unfollow Prayer card owner
   // TODO: Hide prayer card
   // TODO: Email confirmation on signup
-  TODO: Redirect to account creation confirmation after signup
+  // TODO: Redirect to account creation confirmation after signup
   TODO: Password reset
   TODO: Revise about text
   TODO: Display errors to client (login)
@@ -16,6 +16,7 @@
   TODO: Move JWT to cookies
   TODO: Facebook Login
   TODO: Facebook friend search
+  TODO: Select which profile to use
   TODO: Profile editing
   TODO: Clear cache on logout
   TODO: Remove partnerships for unfriended people
@@ -39,6 +40,8 @@ import AppMenu from './common/AppMenu';
 import Navbar from './common/Navbar';
 import Signup from './login/Signup';
 import Login from './login/Login';
+import ForgotPassword from './reset/ForgotPassword';
+import ResetPassword from './reset/ResetPassword';
 
 const client = new ApolloClient({
   uri: process.env.GRAPHQL_ENDPOINT,
@@ -105,6 +108,8 @@ export default class App extends Component {
               <AuthRoute path="/feed" component={Feed} />
               <AuthRoute path="/partnered" component={PartneredFeed} />
               <AuthRoute path="/profile" component={Profile} />
+              <Route path="/forgot" component={ForgotPassword} />
+              <Route path="/password-reset/:hash" component={ResetPassword} />
             </Switch>
             <AppMenu
               isMenuOpen={this.state.isMenuOpen}

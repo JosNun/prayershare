@@ -191,7 +191,7 @@ const resolvers = {
         return error;
       }
 
-      const passHash = await bcrypt.hash(args.password, 5);
+      const passHash = await bcrypt.hash(args.password, 12);
 
       const user = await db('users')
         .insert({
@@ -219,10 +219,10 @@ const resolvers = {
       const confirmUrl = `https://${host}/verify/${user.uid}`;
       const plainTextMail = `Hey ${
         user.firstName
-      }, Please confirm your PrayerShare account at this link: ${confirmUrl}`;
+      }, Please confirm your PrayerShare account at this link: ${confirmUrl} . Didn't try to create an account? Please ignore this email.`;
       const htmlMail = `Hey ${
         user.firstName
-      },<br>Please confirm your PrayerShare account at this link: <a href="${confirmUrl}">${confirmUrl}</a>`;
+      },<br>Please confirm your PrayerShare account at this link: <a href="${confirmUrl}">${confirmUrl}</a>. Didn't try to create an account? Please ignore this email.`;
 
       mailer.sendMail({
         to: user.email,
