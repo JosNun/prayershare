@@ -5,6 +5,7 @@ import { Link, withRouter } from 'react-router-dom';
 import EditIcon from '../assets/icons/edit_icon.svg';
 import AboutIcon from '../assets/icons/about_icon.svg';
 import './AppMenu.css';
+import { userIsLoggedIn } from '../utils/utils';
 
 const AppMenu = withRouter(props => {
   const logout = async () => {
@@ -28,17 +29,25 @@ const AppMenu = withRouter(props => {
   return (
     <div>
       <div className={props.isMenuOpen ? 'AppMenu open' : 'AppMenu'}>
-        <Link to="/profile/edit" className="AppMenu__option">
-          Edit Profile
-          <EditIcon />
-        </Link>
+        {userIsLoggedIn() && (
+          <Link to="/profile/edit" className="AppMenu__option">
+            Edit Profile
+            <EditIcon />
+          </Link>
+        )}
+
         <Link to="/about" className="AppMenu__option">
           About PrayerShare
           <AboutIcon />
         </Link>
-        <div className="AppMenu__option AppMenu__option--red" onClick={logout}>
-          Log Out
-        </div>
+        {userIsLoggedIn() && (
+          <div
+            className="AppMenu__option AppMenu__option--red"
+            onClick={logout}
+          >
+            Log Out
+          </div>
+        )}
       </div>
       <div
         className="AppMenu__backdrop"
