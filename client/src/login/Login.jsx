@@ -63,7 +63,7 @@ export default class extends Component {
               errorMessage = error.graphQLErrors[0].message;
             }
 
-            if (userIsLoggedIn) {
+            if (userIsLoggedIn()) {
               return <Redirect to="/feed" />;
             }
             if (data) {

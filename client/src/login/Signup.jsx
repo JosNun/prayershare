@@ -57,7 +57,7 @@ class Signup extends Component {
         <Mutation mutation={CREATE_USER}>
           {(createUser, { loading, error, data }) => {
             let errorMessage;
-            if (userIsLoggedIn) {
+            if (userIsLoggedIn()) {
               return <Redirect to="/feed" />;
             }
 

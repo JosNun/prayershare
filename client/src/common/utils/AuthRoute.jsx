@@ -7,7 +7,9 @@ export default props => (
     path={props.path}
     render={() => {
       const shouldRedirect =
-        !userIsLoggedIn && props.path !== '/signup' && props.path !== '/login';
+        !userIsLoggedIn() &&
+        props.path !== '/signup' &&
+        props.path !== '/login';
 
       return shouldRedirect ? <Redirect to="/login" /> : <props.component />;
     }}
