@@ -51,6 +51,10 @@ const generateResetHash = async (req, res) => {
 
   const userId = user.id;
 
+  await db('userResetHash')
+    .del()
+    .where('userId', userId);
+
   await db('userResetHash').insert({
     userId,
     resetHash: uniqueHash,
