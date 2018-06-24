@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import { Link, Redirect, withRouter } from 'react-router-dom';
 import Modal from '../common/Modal';
 import './Signup.css';
+import { userIsLoggedIn } from '../utils/utils';
 
 const CREATE_USER = gql`
   mutation createUser(
@@ -56,10 +57,7 @@ class Signup extends Component {
         <Mutation mutation={CREATE_USER}>
           {(createUser, { loading, error, data }) => {
             let errorMessage;
-            if (
-              localStorage.getItem('token') &&
-              localStorage.getItem('userId')
-            ) {
+            if (userIsLoggedIn) {
               return <Redirect to="/feed" />;
             }
 

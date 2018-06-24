@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import { Link, Redirect } from 'react-router-dom';
+import { userIsLoggedIn } from '../utils/utils';
 import './Signup.css';
 
 const LOGIN_USER = gql`
@@ -62,10 +63,7 @@ export default class extends Component {
               errorMessage = error.graphQLErrors[0].message;
             }
 
-            if (
-              localStorage.getItem('token') &&
-              localStorage.getItem('userId')
-            ) {
+            if (userIsLoggedIn) {
               return <Redirect to="/feed" />;
             }
             if (data) {
