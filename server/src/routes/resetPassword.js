@@ -14,6 +14,7 @@ const resetPassword = async (req, res) => {
   console.log(`Request is Old: ${requestIsOld}`);
 
   if (requestIsOld) {
+    res.status(410);
     res.send(
       'Sorry, but it has been too long since you requested the reset. Try resetting again.'
     );

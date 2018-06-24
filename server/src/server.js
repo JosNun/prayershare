@@ -3,6 +3,7 @@ import jwt from 'express-jwt';
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 import { altairExpress } from 'altair-express-middleware';
 import cors from 'cors';
+import { formatError } from 'apollo-errors';
 import bodyParser from 'body-parser';
 import https from 'https';
 import fs from 'fs';
@@ -38,8 +39,10 @@ graphQLServer.use(
   '/graphql',
   bodyParser.json(),
   graphqlExpress(req => ({
+    formatError,
     schema,
     context: { ...req.context, req },
+    debug: false,
   }))
 );
 graphQLServer.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));

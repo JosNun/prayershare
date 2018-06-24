@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import db from './db';
 import mailer from './mailer';
+import { LoginError, SignupError } from './utils/errors';
 
 const resolvers = {
   Query: {
@@ -184,11 +185,7 @@ const resolvers = {
 
       const emailExists = Object.keys(rows).length !== 0;
       if (emailExists) {
-        const error = new Error(
-          'A user already exists for that email address.'
-        );
-        error.name = 'Signup Error';
-        return error;
+        return new SignupError();
       }
 
       const passHash = await bcrypt.hash(args.password, 12);
@@ -253,7 +250,7 @@ const resolvers = {
         .where('email', args.email);
 
       if (user.length === 0) {
-        return new Error("Account doesn't exist");
+        return new LoginError();
       }
 
       [user] = user;
@@ -268,7 +265,7 @@ const resolvers = {
       );
 
       if (!passwordMatches) {
-        return new Error('Invalid password');
+        return new LoginError();
       }
 
       const token = await new Promise((resolve, reject) => {

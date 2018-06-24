@@ -5,9 +5,10 @@
   // TODO: Hide prayer card
   // TODO: Email confirmation on signup
   // TODO: Redirect to account creation confirmation after signup
-  TODO: Password reset
-  TODO: Revise about text
+  // TODO: Password reset
   TODO: Display errors to client (login)
+  TODO: Revise about text
+  TODO: Only show logout if logged in
   TODO: Load more on scroll
   TODO: Loading animations
   TODO: Cache user posts

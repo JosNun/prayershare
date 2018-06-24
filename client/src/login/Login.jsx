@@ -50,8 +50,18 @@ export default class extends Component {
           this.instance = el;
         }}
       >
-        <Mutation mutation={LOGIN_USER}>
+        <Mutation mutation={LOGIN_USER} errorPolicy="all" onError={e => null}>
           {(login, { loading, error, data }) => {
+            let errorMessage;
+
+            if (
+              error &&
+              error.graphQLErrors[0] &&
+              error.graphQLErrors[0].name === 'LoginError'
+            ) {
+              errorMessage = error.graphQLErrors[0].message;
+            }
+
             if (
               localStorage.getItem('token') &&
               localStorage.getItem('userId')
@@ -65,7 +75,10 @@ export default class extends Component {
             }
             return (
               <div className="Login-Form">
+                <h2>Log In</h2>
+                {errorMessage && <p className="error">{errorMessage}</p>}
                 <form
+                  className="Modal__form"
                   onSubmit={e => {
                     e.preventDefault();
                     login({
@@ -73,14 +86,22 @@ export default class extends Component {
                         email: email.value,
                         password: password.value,
                       },
+                    }).catch(err => {
+                      if (
+                        err &&
+                        err.graphQLErrors[0] &&
+                        err.graphQLErrors[0].name === 'LoginError'
+                      ) {
+                        return false;
+                      }
                     });
                   }}
                 >
-                  <h2>Log In</h2>
                   <input
                     type="email"
                     placeholder="email"
                     autoComplete="email"
+                    required
                     ref={node => {
                       email = node;
                     }}
@@ -89,6 +110,7 @@ export default class extends Component {
                     type="password"
                     placeholder="password"
                     autoComplete="current-password"
+                    required
                     ref={node => {
                       password = node;
                     }}

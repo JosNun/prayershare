@@ -55,11 +55,20 @@ class Signup extends Component {
       <div>
         <Mutation mutation={CREATE_USER}>
           {(createUser, { loading, error, data }) => {
+            let errorMessage;
             if (
               localStorage.getItem('token') &&
               localStorage.getItem('userId')
             ) {
               return <Redirect to="/feed" />;
+            }
+
+            if (
+              error &&
+              error.graphQLErrors[0] &&
+              error.graphQLErrors[0].name === 'SignupError'
+            ) {
+              errorMessage = error.graphQLErrors[0].message;
             }
             if (data && data.createUser) {
               return (
@@ -76,6 +85,16 @@ class Signup extends Component {
             }
             return (
               <div className="Login-Form">
+                <h2>Sign Up</h2>
+                {errorMessage && (
+                  <p className="error">
+                    {errorMessage}
+                    <br />
+                    Perhaps you would like to
+                    <br />
+                    <Link to="/forgot">reset your password?</Link>
+                  </p>
+                )}
                 <form
                   onSubmit={e => {
                     e.preventDefault();
@@ -86,14 +105,23 @@ class Signup extends Component {
                         firstName: firstName.value,
                         lastName: lastName.value,
                       },
+                    }).catch(err => {
+                      if (
+                        err &&
+                        err.graphQLErrors[0] &&
+                        err.graphQLErrors[0].name === 'SignupError'
+                      ) {
+                        return false;
+                      }
+                      console.log(err);
                     });
                   }}
                 >
-                  <h2>Sign Up</h2>
                   <input
                     type="firstName"
                     placeholder="First name"
                     autoComplete="given-name"
+                    required
                     ref={node => {
                       firstName = node;
                     }}
@@ -102,6 +130,7 @@ class Signup extends Component {
                     type="lastName"
                     placeholder="Last name"
                     autoComplete="family-name"
+                    required
                     ref={node => {
                       lastName = node;
                     }}
@@ -110,6 +139,7 @@ class Signup extends Component {
                     type="email"
                     placeholder="email"
                     autoComplete="email"
+                    required
                     ref={node => {
                       email = node;
                     }}
@@ -118,6 +148,7 @@ class Signup extends Component {
                     type="password"
                     placeholder="password"
                     autoComplete="new-password"
+                    required
                     ref={node => {
                       password = node;
                     }}
