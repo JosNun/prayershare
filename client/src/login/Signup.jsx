@@ -40,17 +40,25 @@ class Signup extends Component {
 
   onSignIn(googleUser) {
     const { id_token: idToken } = googleUser.getAuthResponse();
-    const xhr = new XMLHttpRequest();
-    xhr.responseType = 'json';
-    xhr.open('POST', '/google-auth');
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onload = () => {
-      localStorage.setItem('token', xhr.response.token);
-      localStorage.setItem('userId', xhr.response.uid);
-      this.props.history.push('/feed');
-    };
-    xhr.send(`idtoken=${idToken}`);
+
+    fetch('/google-auth', {
+      body: JSON.stringify({
+        idToken,
+      }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      method: 'post',
+    })
+      .then(res => res.json())
+      .then(res => {
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('userId', res.uid);
+        this.props.history.push('/feed');
+      });
   }
+
   render() {
     return (
       <div>

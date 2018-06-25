@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, Redirect, withRouter } from 'react-router-dom';
 import { userIsLoggedIn } from '../utils/utils';
 import './Signup.css';
 
@@ -18,7 +18,7 @@ const LOGIN_USER = gql`
 let email;
 
 let password;
-export default class extends Component {
+class Login extends Component {
   componentDidMount() {
     try {
       window.gapi.signin2.render('g-signin2', {
@@ -32,16 +32,23 @@ export default class extends Component {
 
   onSignIn(googleUser) {
     const { id_token: idToken } = googleUser.getAuthResponse();
-    const xhr = new XMLHttpRequest();
-    xhr.responseType = 'json';
-    xhr.open('POST', '/google-auth');
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onload = () => {
-      localStorage.setItem('token', xhr.response.token);
-      localStorage.setItem('userId', xhr.response.uid);
-      this.forceUpdate();
-    };
-    xhr.send(`idtoken=${idToken}`);
+
+    fetch('/google-auth', {
+      body: JSON.stringify({
+        idToken,
+      }),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      method: 'post',
+    })
+      .then(res => res.json())
+      .then(res => {
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('userId', res.uid);
+        this.props.history.push('/feed');
+      });
   }
 
   render() {
@@ -134,3 +141,5 @@ export default class extends Component {
     );
   }
 }
+
+export default withRouter(Login);

@@ -17,7 +17,7 @@ function makeToken(uid) {
 }
 
 const handleGAuth = async (req, res) => {
-  const token = req.body.idtoken;
+  const token = req.body.idToken;
   let userInfo = {};
 
   async function verify() {

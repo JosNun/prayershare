@@ -7,23 +7,26 @@
   // TODO: Redirect to account creation confirmation after signup
   // TODO: Password reset
   // TODO: Display errors to client (login)
+  // TODO: Only show logout if logged in
+  // TODO: Remove partnerships for unfriended people
+  // TODO: Fix logout bug
   TODO: Revise about text
-  TODO: Only show logout if logged in
-  TODO: Move JWT to cookies
   TODO: Load more on scroll
   TODO: Loading animations
-  TODO: Cache user posts
   TODO: Fix visual bug when unfollowing user
-  TODO: Fix logout bug
+  TODO: Select which profile to use
+  TODO: Cache user posts
   TODO: Facebook Login
   TODO: Facebook friend search
-  TODO: Select which profile to use
+  TODO: Invite friends button
   TODO: Profile editing
   TODO: Clear cache on logout
-  TODO: Remove partnerships for unfriended people
   TODO: Animate ALL THE THINGS!
   TODO: Offline support
   TODO: Unfollow confirmation dialog
+  
+  
+  TODO: Move JWT to cookies (Maybe)
 */
 
 import React, { Component } from 'react';

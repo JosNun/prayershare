@@ -11,19 +11,10 @@ const AppMenu = withRouter(props => {
   const logout = async () => {
     console.log('Logging out');
 
-    const auth2 = await window.gapi.auth2.getAuthInstance();
-    if (auth2) {
-      auth2.signOut().then(() => {
-        console.log('user signed out');
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
-        props.history.push('/login');
-      });
-    } else {
-      localStorage.removeItem('token');
-      localStorage.removeItem('userId');
-      props.history.push('/login');
-    }
+    await window.gapi.auth2.getAuthInstance().signOut();
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    props.history.push('/login');
   };
 
   return (

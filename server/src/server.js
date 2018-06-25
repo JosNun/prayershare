@@ -50,13 +50,7 @@ graphQLServer.use('/altair', altairExpress({ endpointURL: '/graphql' }));
 graphQLServer.use('/verify/:id?', verifyAccount);
 graphQLServer.post('/reset/:email?', generateResetHash);
 graphQLServer.post('/password-reset/:hash/:password', resetPassword);
-graphQLServer.use(
-  '/google-auth',
-  bodyParser.urlencoded({
-    extended: false,
-  }),
-  googleAuth
-);
+graphQLServer.use('/google-auth', bodyParser.json(), googleAuth);
 graphQLServer.use(
   express.static(path.join(__dirname, '../..', 'client/build'))
 );
