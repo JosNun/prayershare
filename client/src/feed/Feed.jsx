@@ -47,8 +47,32 @@ export default class Feed extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
-    this.shouldFetchMore = false;
+    this.state = {
+      canFetchMore: true,
+    };
+  }
+
+  loadMore(fetchMore, existingPosts) {
+    fetchMore({
+      variables: {
+        offset: existingPosts.length,
+        limit: 10,
+      },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult.getPostFeed.length) {
+          this.setState({
+            canFetchMore: false,
+          });
+          return prev;
+        }
+
+        const newPosts = Object.assign({}, prev, {
+          getPostFeed: [...prev.getPostFeed, ...fetchMoreResult.getPostFeed],
+        });
+
+        return newPosts;
+      },
+    });
   }
 
   cardsList() {
@@ -79,32 +103,14 @@ export default class Feed extends Component {
             return (
               <React.Fragment>
                 {postCards}
-                <button
-                  className="colored"
-                  onClick={() => {
-                    console.log(`fetching more`);
-                    fetchMore({
-                      variables: {
-                        offset: posts.length,
-                        limit: 10,
-                      },
-                      updateQuery: (prev, { fetchMoreResult }) => {
-                        if (!fetchMoreResult) return prev;
-
-                        const newPosts = Object.assign({}, prev, {
-                          getPostFeed: [
-                            ...prev.getPostFeed,
-                            ...fetchMoreResult.getPostFeed,
-                          ],
-                        });
-
-                        return newPosts;
-                      },
-                    });
-                  }}
-                >
-                  Load More
-                </button>
+                {this.state.canFetchMore && (
+                  <button
+                    className="colored full-width"
+                    onClick={() => this.loadMore(fetchMore, posts)}
+                  >
+                    Load More
+                  </button>
+                )}
               </React.Fragment>
             );
           }

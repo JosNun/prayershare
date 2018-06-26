@@ -35,11 +35,15 @@ button {
   font-family: 'Share', sans-serif;
   height: 30px;
   padding: 5px 15px;
-  width: 100%;
 
   border: none;
   border-radius: 10px;
   font-size: 14px;
+}
+
+input.full-width,
+button.full-width {
+  width: 100%;
 }
 
 button.colored,
