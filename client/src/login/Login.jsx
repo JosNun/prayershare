@@ -22,6 +22,8 @@ class Login extends Component {
   componentDidMount() {
     try {
       window.gapi.signin2.render('g-signin2', {
+        clientId:
+          '720503767101-mo6k4lulhr6sl5crlpee3lth1kldac4k.apps.googleusercontent.com',
         scope: 'profile email',
         onsuccess: this.onSignIn.bind(this),
       });
@@ -47,7 +49,12 @@ class Login extends Component {
       .then(res => {
         localStorage.setItem('token', res.token);
         localStorage.setItem('userId', res.uid);
-        this.props.history.push('/feed');
+        window.gapi.auth2
+          .getAuthInstance()
+          .signOut()
+          .then(() => {
+            this.props.history.push('/feed');
+          });
       });
   }
 
