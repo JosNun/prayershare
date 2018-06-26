@@ -48,6 +48,7 @@ export default class PrayerCard extends Component {
     this.state = {
       isPartnered: this.props.isPartnered,
       isMenuOpen: false,
+      pulsing: false,
     };
 
     this.closeMenu = this.closeMenu.bind(this);
@@ -55,6 +56,7 @@ export default class PrayerCard extends Component {
     this.toggleMenu = this.toggleMenu.bind(this);
     this.togglePartner = this.togglePartner.bind(this);
     this.unfollowPoster = this.unfollowPoster.bind(this);
+    this.endPulse = this.endPulse.bind(this);
   }
 
   togglePartner(apolloClient, id, isPartnered) {
@@ -67,6 +69,7 @@ export default class PrayerCard extends Component {
     const wasPartnered = this.state.isPartnered;
     this.setState({
       isPartnered: !wasPartnered,
+      pulsing: true,
     });
   }
 
@@ -88,7 +91,6 @@ export default class PrayerCard extends Component {
       },
       refetchQueries: ['getPostFeed', 'user'],
     });
-    console.log(`Unfollowing poster`);
   }
 
   deletePrayer(apolloClient, id) {
@@ -114,7 +116,12 @@ export default class PrayerCard extends Component {
     });
 
     // this.props.postModifiedHandler();
-    console.log(`Deleting Card`);
+  }
+
+  endPulse() {
+    this.setState({
+      pulsing: false,
+    });
   }
 
   render() {
@@ -127,15 +134,17 @@ export default class PrayerCard extends Component {
             <div className="PrayerCard__middle-divider" />
             <div className="PrayerCard__right-divider" />
             <PartnerButton
+              isPulsing={this.state.pulsing}
               isPartnered={this.state.isPartnered}
+              onPulseEnd={this.endPulse}
               clickHandler={
                 !this.props.isOwnCard
                   ? this.togglePartner.bind(
-                      this,
-                      client,
-                      this.props.id,
-                      this.state.isPartnered
-                    )
+                    this,
+                    client,
+                    this.props.id,
+                    this.state.isPartnered
+                  )
                   : null
               }
               partneredAmount={

@@ -13,9 +13,11 @@ const PartnerButton = props => (
         : 'PartnerButton ') +
       (props.partneredAmount || props.partneredAmount === 0
         ? ' hasPartners'
-        : '')
+        : '') +
+      (props.isPulsing ? 'pulsing' : '')
     }
     onClick={props.clickHandler}
+    onAnimationEnd={props.onPulseEnd}
   >
     <PartnerIcon />
     <div>
