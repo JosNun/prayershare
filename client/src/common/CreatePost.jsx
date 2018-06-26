@@ -38,6 +38,10 @@ export default withRouter(props => (
               update: (cache, { data: { createPost: post } }) => {
                 const data = cache.readQuery({
                   query: GET_POSTS,
+                  variables: {
+                    limit: 10,
+                    offset: 0,
+                  },
                 });
                 const cachePost = {
                   ...post,
@@ -47,6 +51,10 @@ export default withRouter(props => (
                 data.getPostFeed.unshift(cachePost);
                 cache.writeQuery({
                   query: GET_POSTS,
+                  variables: {
+                    limit: 10,
+                    offset: 0,
+                  },
                   data: {
                     ...data,
                     isPartnered: false,
