@@ -18,7 +18,7 @@
 .AppMenu.open {
   transform: translate(0, 0);
   opacity: 1;
-  z-index: 1;
+  z-index: 105;
 }
 
 .AppMenu__option {
@@ -67,6 +67,7 @@
   left: 0;
 
   display: block;
+  z-index: 104;
 
   background-color: transparent;
 }

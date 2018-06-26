@@ -9,8 +9,33 @@
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
   width: calc(100% - 80px);
+  z-index: 100;
 
   transform: translate(-50%, -50%);
+}
+
+.Modal-prompt {
+  padding-bottom: 45px;
+}
+
+.Modal__submit-button {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: initial;
+  
+  background-color: #79c274;
+  color: #fff;
+}
+
+.Modal__cancel-button {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: initial;
+  
+  background-color: #e67373;
+  color: #fff;
 }
 
 .Modal__backdrop {
