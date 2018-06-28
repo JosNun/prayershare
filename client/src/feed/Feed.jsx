@@ -5,6 +5,7 @@ import AuthRoute from '../common/utils/AuthRoute';
 
 import CreatePost from '../common/CreatePost';
 import FeedCards from './FeedCards';
+import PrayerCard from '../common/PrayerCard/PrayerCard';
 
 export const GET_POSTS = gql`
   query getPostFeed($limit: Int, $offset: Int) {

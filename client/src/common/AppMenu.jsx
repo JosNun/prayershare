@@ -14,7 +14,7 @@ const AppMenu = withRouter(props => {
     try {
       await window.gapi.auth2.getAuthInstance().signOut();
     } catch (err) {
-      console.log(err);
+      console.log('Not signed in with Google');
     }
     localStorage.removeItem('token');
     localStorage.removeItem('userId');

@@ -41,8 +41,8 @@ const resolvers = {
 
       const posts = await db
         .from('users as friends')
-        .join('userFriend', 'friends.id', 'userfriend.friendId')
-        .leftOuterJoin('users as user', 'user.id', 'userFriend.userId')
+        .join('UserFriend', 'friends.id', 'UserFriend.friendId')
+        .leftOuterJoin('users as user', 'user.id', 'UserFriend.userId')
         .join('posts', 'friends.uid', 'posts.userUid')
         .select(
           'posts.content',
@@ -50,11 +50,11 @@ const resolvers = {
           'posts.uid as id',
           'posts.createdAt',
           db.raw(
-            'exists(select 1 from userPartnership where :partnershipUser: = :userId: and :partnershipPost: = :postId:) as isPartnered',
+            'exists(select 1 from UserPartnership where :partnershipUser: = :userId: and :partnershipPost: = :postId:) as isPartnered',
             {
-              partnershipUser: 'userPartnership.userId',
+              partnershipUser: 'UserPartnership.userId',
               userId: 'user.id',
-              partnershipPost: 'userPartnership.postId',
+              partnershipPost: 'UserPartnership.postId',
               postId: 'posts.id',
             }
           )
@@ -123,18 +123,18 @@ const resolvers = {
           .column({ id: 'uid' }, 'firstName', 'lastName', 'profilePhoto')
           .select()
           .limit(args.limit)
-          .join('userfriend', query => {
+          .join('UserFriend', query => {
             query
-              .on('userfriend.friendId', '=', 'users.id')
+              .on('UserFriend.friendId', '=', 'users.id')
               .andOn('userId', '=', userId);
           });
       } else {
         friends = await db('users')
           .column({ id: 'uid' }, 'firstName', 'lastName', 'profilePhoto')
           .select()
-          .join('userfriend', query => {
+          .join('UserFriend', query => {
             query
-              .on('userfriend.friendId', '=', 'users.id')
+              .on('UserFriend.friendId', '=', 'users.id')
               .andOn('userId', '=', userId);
           });
       }
@@ -164,10 +164,10 @@ const resolvers = {
       let [partnerCount] = await db('posts')
         .select(
           db.raw(
-            '(select count(*) from userPArtnership where userPartnership.postId = posts.id) as amount'
+            '(select count(*) from UserPartnership where UserPartnership.postId = posts.id) as amount'
           )
         )
-        .join('userPartnership', 'userPArtnership.postId', 'posts.id')
+        .join('UserPartnership', 'UserPartnership.postId', 'posts.id')
         .where('posts.uid', post.id);
 
       partnerCount = partnerCount ? partnerCount.amount : 0;

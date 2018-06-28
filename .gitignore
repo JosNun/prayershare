@@ -8,11 +8,15 @@ client/coverage
 
 # production
 client/build
+server/lib
 dist
 
 # credentials
 config.js
 *.pem
+
+# Configuration
+app.yaml
 
 # misc
 .DS_Store

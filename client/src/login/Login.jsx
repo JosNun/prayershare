@@ -34,7 +34,7 @@ class Login extends Component {
 
   onSignIn(googleUser) {
     const { id_token: idToken } = googleUser.getAuthResponse();
-
+    console.log('User signed in with Google');
     fetch('/google-auth', {
       body: JSON.stringify({
         idToken,

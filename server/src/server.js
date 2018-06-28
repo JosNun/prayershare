@@ -14,7 +14,7 @@ import googleAuth from './routes/googleAuth';
 import verifyAccount from './routes/verifyAccount';
 import { resetPassword, generateResetHash } from './routes/resetPassword';
 
-const GRAPHQL_PORT = process.env.PORT;
+const GRAPHQL_PORT = process.env.PORT || 8080;
 
 const graphQLServer = express();
 
@@ -63,11 +63,15 @@ const httpsOptions = {
   cert: fs.readFileSync('./server/src/cert.pem'),
 };
 
-const server = https
-  .createServer(httpsOptions, graphQLServer)
-  .listen(GRAPHQL_PORT, () =>
-    console.log(
-      `GraphiQL is now running on http://localhost:${GRAPHQL_PORT}/graphiql\n` +
-        `Oh, and Altair is running on http://localhost:${GRAPHQL_PORT}/altair`
-    )
-  );
+graphQLServer.listen(GRAPHQL_PORT, () =>
+  console.log(`App listening on port ${GRAPHQL_PORT}!`)
+);
+
+// const server = https
+//   .createServer(httpsOptions, graphQLServer)
+//   .listen(GRAPHQL_PORT, () => {
+//     console.log(
+//       `GraphiQL is now running on http://localhost:${GRAPHQL_PORT}/graphiql\n` +
+//         `Oh, and Altair is running on http://localhost:${GRAPHQL_PORT}/altair`
+//     );
+//   });

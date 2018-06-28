@@ -5,13 +5,14 @@
   "main": "server/src/server.js",
   "scripts": {
     "babel-node": "babel-node --ignore='client,node_modules'",
-    "build": "babel lib -d dist --source-maps",
+    "build": "babel server/src -d server/lib",
     "client": "node start-client.js",
     "dev": "npm run babel-node -- server/src/server.js --inspect",
+    "deploy": "npm run build && gcloud app deploy",
     "develop": "nodemon --inspect --exec npm run babel-node -- server/src/server.js --source-maps",
-    "serve": "node dist/server.js",
+    "serve": "export $(grep -v '^#' .env | xargs) && node server/lib/server.js",
     "server": "babel-node server/src/server.js",
-    "start": "concurrently \"npm run server\" \"npm run client\""
+    "start": "node server/lib/server.js"
   },
   "author": "Josiah Nunemaker",
   "license": "MIT",
@@ -20,7 +21,6 @@
     "babel-eslint": "^7.2.3",
     "babel-plugin-syntax-object-rest-spread": "^6.13.0",
     "babel-preset-env": "^1.7.0",
-    "concurrently": "^3.5.1",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-config-prettier": "^2.9.0",
