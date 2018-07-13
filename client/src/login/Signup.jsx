@@ -32,12 +32,16 @@ let lastName;
 
 class Signup extends Component {
   componentDidMount() {
-    window.gapi.signin2.render('g-signin2', {
-      clientId:
-        '720503767101-mo6k4lulhr6sl5crlpee3lth1kldac4k.apps.googleusercontent.com',
-      scope: 'profile email',
-      onsuccess: this.onSignIn.bind(this),
-    });
+    try {
+      window.gapi.signin2.render('g-signin2', {
+        clientId:
+          '720503767101-mo6k4lulhr6sl5crlpee3lth1kldac4k.apps.googleusercontent.com',
+        scope: 'profile email',
+        onsuccess: this.onSignIn.bind(this),
+      });
+    } catch (err) {
+      // catch errors because the component mounted before the button was loaded
+    }
   }
 
   onSignIn(googleUser) {

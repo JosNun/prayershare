@@ -1,13 +1,10 @@
 import knex from 'knex';
 import config from './config';
 
-// if (
-//   process.env.INSTANCE_CONNECTION_NAME &&
-//   process.env.NODE_ENV === 'production'
-// ) {
-//   config.socketPath = `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`;
-//   console.log('setting for production db');
-// }
+process.env.SQL_INSTANCE_CONNECTION_NAME &&
+process.env.NODE_ENV === 'production'
+  ? console.log('using prod')
+  : console.log('using dev');
 
 const db = knex({
   client: 'mysql',

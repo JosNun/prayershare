@@ -1,5 +1,4 @@
 import db from '../db';
-import mailer from '../mailer';
 
 const handleVerify = async (req, res) => {
   const host = req.get('host');
