@@ -51,6 +51,7 @@ import Signup from './login/Signup';
 import Login from './login/Login';
 import ForgotPassword from './reset/ForgotPassword';
 import ResetPassword from './reset/ResetPassword';
+import Welcome from './welcome/Welcome';
 
 const client = new ApolloClient({
   // uri: process.env.GRAPHQL_ENDPOINT,
@@ -70,11 +71,23 @@ export default class App extends Component {
 
     this.state = {
       isMenuOpen: false,
+      isWelcoming: !localStorage.getItem('wasWelcomed'),
     };
+
+    this.setWelcoming = this.setWelcoming.bind(this);
 
     this.openMenu = this.openMenu.bind(this);
     this.closeMenu = this.closeMenu.bind(this);
     this.toggleMenu = this.toggleMenu.bind(this);
+  }
+
+  setWelcoming(val) {
+    val
+      ? localStorage.removeItem('wasWelcomed')
+      : localStorage.setItem('wasWelcomed', true);
+    this.setState({
+      isWelcoming: val,
+    });
   }
 
   openMenu() {
@@ -99,7 +112,12 @@ export default class App extends Component {
 
   componentDidMount() {
     window.addEventListener('load', () => {
-      window.gapi.load('auth2');
+      try {
+        window.gapi.load('auth2');
+      } catch (err) {
+        console.log('Google login unavailable');
+        console.warn(err);
+      }
     });
   }
 
@@ -108,26 +126,48 @@ export default class App extends Component {
       <ApolloProvider client={client}>
         <BrowserRouter>
           <div className="Routed-container">
+            <Route
+              path="*"
+              render={props =>
+                this.state.isWelcoming &&
+                window.location.pathname.split('/')[1] !== 'welcome' && (
+                  <Redirect to="/welcome" />
+                )
+              }
+            />
             <Switch>
+              <Route
+                path="/welcome"
+                render={props => (
+                  <Welcome
+                    isWelcoming={this.state.isWelcoming}
+                    setWelcoming={this.setWelcoming}
+                  />
+                )}
+              />
+              <Redirect exact path="/" to="/welcome" />
               <Route path="/signup" component={Signup} />
               <Route path="/login" component={Login} />
               <Route path="/about" component={About} />
 
-              <Redirect exact path="/" to="/feed" />
               <AuthRoute path="/feed" component={Feed} />
               <AuthRoute path="/partnered" component={PartneredFeed} />
               <AuthRoute path="/profile" component={Profile} />
               <Route path="/forgot" component={ForgotPassword} />
               <Route path="/password-reset/:hash" component={ResetPassword} />
             </Switch>
-            <AppMenu
-              isMenuOpen={this.state.isMenuOpen}
-              closeHandler={this.closeMenu}
-            />
-            <Navbar
-              menuClickHandler={this.toggleMenu}
-              isMenuOpen={this.state.isMenuOpen}
-            />
+            {!this.state.isWelcoming && (
+              <React.Fragment>
+                <AppMenu
+                  isMenuOpen={this.state.isMenuOpen}
+                  closeHandler={this.closeMenu}
+                />
+                <Navbar
+                  menuClickHandler={this.toggleMenu}
+                  isMenuOpen={this.state.isMenuOpen}
+                />
+              </React.Fragment>
+            )}
           </div>
         </BrowserRouter>
       </ApolloProvider>

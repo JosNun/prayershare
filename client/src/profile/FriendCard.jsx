@@ -10,8 +10,7 @@ const FriendCard = props => (
     >
       <img
         src={
-          props.avatarUrl ||
-          `${process.env.PUBLIC_URL} /images/icons/avatar.png`
+          props.avatarUrl || `${process.env.PUBLIC_URL}/images/icons/avatar.png`
         }
         alt="avatar"
       />
@@ -29,7 +28,7 @@ const FriendCard = props => (
         className="FriendCard__follow-button"
         onClick={props.addFriendHandler}
       >
-        Add Friend
+        Follow
       </div>
     )}
   </div>
@@ -38,7 +37,7 @@ const FriendCard = props => (
 FriendCard.propTypes = {
   avatarUrl: PropTypes.string,
   name: PropTypes.string.isRequired,
-  unfollowHandler: PropTypes.func.isRequired,
+  unfollowHandler: PropTypes.func,
 };
 
 FriendCard.defaultProps = {
