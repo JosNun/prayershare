@@ -66,7 +66,7 @@ class Login extends Component {
         }}
       >
         <Mutation mutation={LOGIN_USER} errorPolicy="all" onError={e => null}>
-          {(login, { loading, error, data }) => {
+          {(login, { loading, error, data, client }) => {
             let errorMessage;
 
             if (
@@ -83,6 +83,7 @@ class Login extends Component {
             if (data) {
               localStorage.setItem('token', data.login.jwt);
               localStorage.setItem('userId', data.login.id);
+              client.resetStore();
               return <Redirect to="/feed" />;
             }
             return (
