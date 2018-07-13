@@ -10,6 +10,8 @@
   // TODO: Only show logout if logged in
   // TODO: Remove partnerships for unfriended people
   // TODO: Fix logout bug
+  // TODO: Clear cache on logout
+  
   TODO: Revise about text
   TODO: Contact page
   TODO: Privacy policy / TOS
@@ -25,7 +27,6 @@
   TODO: Facebook friend search
   TODO: Select which profile to use
   TODO: Invite friends button
-  TODO: Clear cache on logout
   TODO: Animate ALL THE THINGS!
   TODO: Offline support
   TODO: Unfollow confirmation dialog
