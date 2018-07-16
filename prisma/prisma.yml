@@ -1,5 +1,0 @@
-endpoint: http://localhost:4466/prayershare/dev
-datamodel: datamodel.graphql
-hooks:
-  post-deploy:
-    - graphql get-schema --project prisma

@@ -10,12 +10,21 @@ const PartnerButton = props => (
     className={
       (props.isPartnered
         ? 'PartnerButton PartnerButton--partnered '
-        : 'PartnerButton ') + (props.partneredAmount ? ' hasPartners' : '')
+        : 'PartnerButton ') +
+      (props.partneredAmount || props.partneredAmount === 0
+        ? ' hasPartners'
+        : '') +
+      (props.isPulsing ? 'pulsing' : '')
     }
     onClick={props.clickHandler}
+    onAnimationEnd={props.onPulseEnd}
   >
     <PartnerIcon />
-    <div>{props.partneredAmount ? `x ${props.partneredAmount}` : ''}</div>
+    <div>
+      {props.partneredAmount || props.partneredAmount === 0
+        ? `x ${props.partneredAmount}`
+        : ''}
+    </div>
   </div>
 );
 

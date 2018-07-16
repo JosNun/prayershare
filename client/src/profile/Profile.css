@@ -22,6 +22,8 @@
   top: 50%;
   width: 75%;
 
+  padding: initial;
+
   border: none;
   color: #79c274;
   font-size: 18px;
@@ -108,6 +110,23 @@
   padding: 2px 8px;
 
   background-color: #e67373;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 14px;
+  transform: translate(0, -50%);
+}
+
+.FriendCard__follow-button {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  padding: 2px 8px;
+
+  background-color: #79c274;
   border-radius: 10px;
   color: #fff;
   font-size: 14px;

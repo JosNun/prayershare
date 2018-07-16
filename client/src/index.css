@@ -6,6 +6,10 @@ body {
   background-color: #fffae3;
 }
 
+#root {
+  overflow: hidden;
+}
+
 h1,
 h2,
 h3,
@@ -26,10 +30,71 @@ a {
   color: #79c274;
 }
 
-input {
+textarea {
   font-family: 'Share', sans-serif;
 }
 
+input,
+button {
+  font-family: 'Share', sans-serif;
+  height: 30px;
+  padding: 5px 15px;
+
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+input.full-width,
+button.full-width {
+  width: 100%;
+}
+
+button.colored,
+input.colored {
+  background-color: #79c274;
+  color: #fff;
+}
+
 .MainView {
+  max-height: calc(100vh - 90px);
+  overflow: scroll;
   padding: 20px 20px 48px 20px;
+}
+
+.Routed-Container {
+  overflow: hidden;
+}
+
+.Modal__form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Modal__form > input {
+  height: 15px;
+  
+  margin: 5px;
+  padding: 5px;
+  
+  border: 2px solid #e1e1e1;
+  border-radius: 10px;
+}
+
+
+.Modal__form input[type='submit'] {
+  height: 30px;
+  padding: 5px 15px;
+
+  background-color: #79c274;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+}
+
+.error {
+  font-size: 12px;
+  margin: 0;
+  color: #e67373;
 }

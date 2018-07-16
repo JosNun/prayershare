@@ -1,0 +1,45 @@
+.Welcome {
+  padding: 10px;
+}
+
+.Welcome__header {
+  text-align: center;
+}
+
+.Welcome__header h1 {
+  margin-bottom: 10px;
+}
+
+.Welcome__header p {
+  margin-top: 10px;
+}
+
+.Welcome__how-it-works {
+  display: flex;
+  flex-direction: column;
+  
+  margin: 15px;
+}
+
+.Welcome__how-it-works p:first-child {
+ margin-top: 0; 
+}
+
+.Welcome__how-it-works h4 {
+  color: #646464;
+  margin: 15px 0;
+}
+
+.Welcome__how-it-works .partner-icon {
+  width: auto;
+  height: 40px;
+  align-self: center;
+}
+
+.Welcome__how-it-works .partner-icon .back-hand {
+  fill: #79c274;
+}
+
+.Welcome__how-it-works .partner-icon .front-hand {
+  fill: #8be8aa;
+}

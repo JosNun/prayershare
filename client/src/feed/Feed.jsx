@@ -1,23 +1,20 @@
 import React, { Component } from 'react';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
+import AuthRoute from '../common/utils/AuthRoute';
 
-import { UserContext } from '../App';
-
+import CreatePost from '../common/CreatePost';
+import FeedCards from './FeedCards';
 import PrayerCard from '../common/PrayerCard/PrayerCard';
 
-const getPosts = gql`
-  query user($id: Int!) {
-    user(id: $id) {
-      friends {
-        posts {
-          id
-          content
-          owner {
-            id
-          }
-        }
-      }
+export const GET_POSTS = gql`
+  query getPostFeed($limit: Int, $offset: Int) {
+    getPostFeed(limit: $limit, offset: $offset) {
+      id
+      content
+      owner
+      partnerCount
+      isPartnered
     }
   }
 `;
@@ -26,41 +23,82 @@ export default class Feed extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      canFetchMore: true,
+    };
   }
 
-  cardsList(id) {
-    if (id) {
-      return (
-        <Query query={getPosts} variables={{ id }}>
-          {({ loading, error, data }) => {
-            if (loading) return <PrayerCard>Loading...</PrayerCard>;
-            if (error) return <p>Uh oh. An error has occured :(</p>;
+  loadMore(fetchMore, existingPosts) {
+    fetchMore({
+      variables: {
+        offset: existingPosts.length,
+        limit: 10,
+      },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult.getPostFeed.length) {
+          this.setState({
+            canFetchMore: false,
+          });
+          return prev;
+        }
 
-            const posts = data.user.friends.reduce(
-              (acc, friend) => acc.concat(friend.posts),
-              []
-            );
+        const newPosts = Object.assign({}, prev, {
+          getPostFeed: [...prev.getPostFeed, ...fetchMoreResult.getPostFeed],
+        });
 
-            const postCards = posts.map(post => (
-              <PrayerCard key={post.id} owner={post.owner.id}>
-                {post.content}
-              </PrayerCard>
-            ));
-
-            return postCards;
-          }}
-        </Query>
-      );
-    }
-    return <p>Loading...</p>;
+        return newPosts;
+      },
+    });
   }
 
   render() {
     return (
-      <UserContext.Consumer>
-        {userId => <div className="MainView">{this.cardsList(userId)}</div>}
-      </UserContext.Consumer>
+      <div>
+        <div className="MainView">
+          <Query
+            query={GET_POSTS}
+            variables={{
+              limit: 10,
+              offset: 0,
+            }}
+            fetchPolicy="cache-and-network"
+          >
+            {({ loading, error, data, refetch, fetchMore }) => {
+              if (data && Object.keys(data).length !== 0) {
+                const posts = data.getPostFeed;
+
+                if (posts.length === 0) {
+                  return (
+                    <div>
+                      <h3>No posts in your feed!</h3>
+                      <p>Try adding some friends!</p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <React.Fragment>
+                    <FeedCards>{posts}</FeedCards>
+                    {this.state.canFetchMore && (
+                      <button
+                        className="colored full-width"
+                        onClick={() => this.loadMore(fetchMore, posts)}
+                      >
+                        Load More
+                      </button>
+                    )}
+                  </React.Fragment>
+                );
+              }
+
+              if (loading) return <PrayerCard>Loading...</PrayerCard>;
+              return <p>Uh oh. An error has occured :(</p>;
+            }}
+          </Query>
+        </div>
+
+        <AuthRoute exact path="/feed/create-post" component={CreatePost} />
+      </div>
     );
   }
 }

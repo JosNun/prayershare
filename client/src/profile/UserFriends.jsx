@@ -1,104 +1,237 @@
 import React, { Component } from 'react';
+import { ApolloConsumer } from 'react-apollo';
+import gql from 'graphql-tag';
 
 import FriendSearchCard from './FriendSearchCard';
 import FriendCard from './FriendCard';
 
-const dummyFriends = [
-  {
-    name: 'John Smith',
-    id: 5,
-    avatarUrl: null,
-  },
-  {
-    name: 'Alexander T. Great',
-    id: 643,
-    avatarUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/a/a1/AlexanderTheGreat_Bust_Transparent.png',
-  },
-  {
-    name: 'John Smith',
-    id: 5432,
-    avatarUrl: null,
-  },
-  {
-    name: 'Alexander T. Great',
-    id: 6433421,
-    avatarUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/a/a1/AlexanderTheGreat_Bust_Transparent.png',
-  },
-  {
-    name: 'John Smith',
-    id: 595,
-    avatarUrl: null,
-  },
-  {
-    name: 'Alexander T. Great',
-    id: 64343,
-    avatarUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/a/a1/AlexanderTheGreat_Bust_Transparent.png',
-  },
-  {
-    name: 'John Smith',
-    id: 3455,
-    avatarUrl: null,
-  },
-  {
-    name: 'Alexander T. Great',
-    id: 64783,
-    avatarUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/a/a1/AlexanderTheGreat_Bust_Transparent.png',
-  },
-];
+const GET_USER_FRIENDS = gql`
+  query user {
+    user {
+      friends {
+        id
+        firstName
+        lastName
+        profilePhoto
+      }
+    }
+  }
+`;
+
+const SEARCH_USERS = gql`
+  query users($limit: Int, $filter: String) {
+    users(limit: $limit, filter: $filter) {
+      firstName
+      lastName
+      id
+      profilePhoto
+    }
+  }
+`;
+
+const ADD_FRIEND = gql`
+  mutation addFriend($friendId: ID!) {
+    addFriend(friendId: $friendId) {
+      id
+    }
+  }
+`;
+
+const REMOVE_FRIEND = gql`
+  mutation removeFriend($friendId: ID!) {
+    removeFriend(friendId: $friendId) {
+      id
+    }
+  }
+`;
 
 class UserFriends extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     this.state = {
-      friends: dummyFriends,
+      users: null,
+      friends: null,
+      isShowingFriends: true,
     };
 
-    // this.unfollowHandler = this.unfollowHandler.bind(this);
+    this.searchUsers = this.searchUsers.bind(this);
+    this.getFriends = this.getFriends.bind(this);
+    this.addFriendHandler = this.addFriendHandler.bind(this);
+    this.unfollowHandler = this.unfollowHandler.bind(this);
   }
 
-  unfollowHandler(id) {
-    console.log(`unfollowing person ${id.toString()}`);
+  componentDidMount() {
+    this.getFriends();
   }
 
-  // makeFriendCards() {
-  //   const friendCards = ;
+  onUsersFetched = users => {
+    const markedUsers = this.markUserFriends(users, this.state.friends);
 
-  //   friendCards.push(<div onClick={this.unfollowHandler}>Hello</div>);
-  //   return friendCards;
-  // }
+    this.setState({
+      users: markedUsers,
+      isShowingFriends: false,
+    });
+  };
 
-  render() {
-    const friendCards = this.state.friends.map(friend => {
-      if (friend.avatarUrl) {
-        return (
-          <FriendCard
-            id={friend.id}
-            name={friend.name}
-            avatarUrl={friend.avatarUrl}
-            key={friend.id}
-            unfollowHandler={this.unfollowHandler.bind(this, friend.id)}
-          />
-        );
+  onFriendsFetched = friends => {
+    const markedFriends = friends.map(friend => ({
+      ...friend,
+      isFriend: true,
+    }));
+
+    this.setState({
+      friends: markedFriends,
+      users: markedFriends,
+      isShowingFriends: true,
+    });
+  };
+
+  getFriends(client) {
+    const apolloClient = client || this.client;
+
+    apolloClient
+      .query({
+        query: GET_USER_FRIENDS,
+        fetchPolicy: 'network-only',
+      })
+      .then(({ data: newData, loading: isLoading, error: isErr }) => {
+        if (isErr) return <p>error</p>;
+        if (isLoading) return <p>loading...</p>;
+        this.onFriendsFetched(newData.user.friends);
+      });
+  }
+
+  markUserFriends(users, friends) {
+    if (!users || !friends) return users;
+    const markedUsers = users.map(user => {
+      const isFriend = friends.find(friend => {
+        if (user.id === friend.id) return true;
+        return false;
+      });
+      if (isFriend) {
+        return {
+          ...user,
+          isFriend: true,
+        };
       }
-      return (
-        <FriendCard
-          id={friend.id}
-          name={friend.name}
-          key={friend.id}
-          unfollowHandler={this.unfollowHandler.bind(this, friend.id)}
-        />
-      );
+      return user;
+    });
+    return markedUsers;
+  }
+
+  addFriendHandler(client, friendId) {
+    const apolloClient = client || this.client;
+
+    apolloClient.mutate({
+      mutation: ADD_FRIEND,
+      variables: {
+        friendId,
+      },
     });
 
+    const index = this.state.users.findIndex(el => el.id === friendId);
+
+    const users = this.state.users.map((item, i) => {
+      if (i === index) {
+        return {
+          ...item,
+          isFriend: true,
+        };
+      }
+      return item;
+    });
+
+    this.setState({
+      users,
+    });
+  }
+
+  unfollowHandler(client, friendId) {
+    const apolloClient = client || this.client;
+
+    apolloClient.mutate({ mutation: REMOVE_FRIEND, variables: { friendId } });
+
+    const index = this.state.users.findIndex(el => el.id === friendId);
+
+    const users = this.state.users.map((item, i) => {
+      if (i === index) {
+        return { ...item, isFriend: false };
+      }
+      return item;
+    });
+
+    this.setState({ users });
+  }
+
+  searchUsers(client, filter) {
+    const apolloClient = client || this.client;
+
+    apolloClient
+      .query({
+        query: SEARCH_USERS,
+        variables: {
+          limit: 10,
+          filter: filter || '',
+        },
+      })
+      .then(({ data: newData, loading: isLoading, error: isErr }) => {
+        if (isErr) return <p>error</p>;
+        if (isLoading) return <p>loading...</p>;
+        this.onUsersFetched(newData.users);
+      });
+  }
+
+  client;
+
+  render() {
     return (
       <div className="Profile-Card-Container">
-        <FriendSearchCard onClick={this.unfollowHandler} />
-        {friendCards}
+        <ApolloConsumer>
+          {client => {
+            this.client = client;
+            return (
+              <div>
+                <FriendSearchCard
+                  performSearch={this.searchUsers}
+                  showFriends={this.getFriends}
+                  client={client}
+                />
+                {this.state.friends &&
+                this.state.friends.length === 0 &&
+                this.state.users &&
+                this.state.users.length === 0 ? (
+                  <h3>You have no friends :(</h3>
+                ) : (
+                  ''
+                )}
+                {this.state.users &&
+                  this.state.users.map(friend => (
+                    <FriendCard
+                      id={friend.id}
+                      name={`${friend.firstName} ${friend.lastName}`}
+                      avatarUrl={friend.profilePhoto}
+                      isFriend={friend.isFriend}
+                      key={friend.id}
+                      apolloClient={client}
+                      unfollowHandler={e => {
+                        this.unfollowHandler(client, friend.id);
+                        if (this.state.isShowingFriends) {
+                          this.getFriends();
+                        }
+                      }}
+                      addFriendHandler={e => {
+                        this.addFriendHandler(client, friend.id);
+                        if (this.state.isShowingFriends) {
+                          this.getFriends();
+                        }
+                      }}
+                    />
+                  ))}
+              </div>
+            );
+          }}
+        </ApolloConsumer>
       </div>
     );
   }
