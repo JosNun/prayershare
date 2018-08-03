@@ -1,4 +1,7 @@
 import { makeExecutableSchema } from 'graphql-tools';
+import merge from 'lodash.merge';
+import userResolvers from './user/resolvers';
+import postResolvers from './post/resolvers';
 import resolvers from './resolvers';
 
 const typeDefs = `#graphql
@@ -51,6 +54,8 @@ type Post {
   isPartnered: Boolean
 }
 `;
+
+merge(resolvers, userResolvers, postResolvers);
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 export default schema;

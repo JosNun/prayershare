@@ -48,6 +48,7 @@
     "graphql-tools": "^3.0.1",
     "jsonwebtoken": "^8.3.0",
     "knex": "^0.14.6",
+    "lodash.merge": "^4.6.1",
     "mysql": "^2.15.0",
     "mysql2": "^1.5.3",
     "nodemailer": "^4.6.7",
