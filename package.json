@@ -5,12 +5,11 @@
   "main": "server/src/server.js",
   "scripts": {
     "babel-node": "babel-node --ignore='client,node_modules'",
-    "build": "babel server/src -d server/lib",
+    "build": "babel server/src -d server/lib && cd client && npm run-script build",
+    "build:client": "babel server/src -d server/lib",
     "client": "node start-client.js",
     "dev": "npm run babel-node -- server/src/server.js --inspect",
-    "deploy": "npm run build && gcloud app deploy",
     "develop": "nodemon --inspect --exec npm run babel-node -- server/src/server.js --source-maps",
-    "serve": "export $(grep -v '^#' .env | xargs) && node server/lib/server.js",
     "server": "babel-node server/src/server.js",
     "start": "node server/lib/server.js"
   },
@@ -41,6 +40,7 @@
     "body-parser": "^1.18.3",
     "casual": "^1.5.19",
     "cors": "^2.8.4",
+    "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "express-jwt": "^5.3.1",
     "google-auth-library": "^1.6.1",

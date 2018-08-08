@@ -14,6 +14,8 @@ import googleAuth from './routes/googleAuth';
 import verifyAccount from './routes/verifyAccount';
 import { resetPassword, generateResetHash } from './routes/resetPassword';
 
+require('dotenv').config();
+
 const GRAPHQL_PORT = process.env.PORT || 8080;
 
 const graphQLServer = express();
