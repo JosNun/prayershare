@@ -11,8 +11,8 @@
   // TODO: Remove partnerships for unfriended people
   // TODO: Fix logout bug
   // TODO: Clear cache on logout
+  // TODO: Revise about text
   
-  TODO: Revise about text
   TODO: Contact page
   TODO: Privacy policy / TOS
   TODO: Redirect to login on invalid JWT
