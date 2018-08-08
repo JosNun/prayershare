@@ -6,7 +6,8 @@
   "scripts": {
     "babel-node": "babel-node --ignore='client,node_modules'",
     "build": "babel server/src -d server/lib && cd client && npm run-script build",
-    "build:client": "babel server/src -d server/lib",
+    "build:server": "babel server/src -d server/lib",
+    "build:client": "cd client && npm run-script build",
     "client": "node start-client.js",
     "dev": "npm run babel-node -- server/src/server.js --inspect",
     "develop": "nodemon --inspect --exec npm run babel-node -- server/src/server.js --source-maps",
