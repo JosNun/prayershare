@@ -5,8 +5,6 @@ import { altairExpress } from 'altair-express-middleware';
 import cors from 'cors';
 import { formatError } from 'apollo-errors';
 import bodyParser from 'body-parser';
-import https from 'https';
-import fs from 'fs';
 import path from 'path';
 
 import schema from './schema';
@@ -60,20 +58,6 @@ graphQLServer.get('*', (req, res) =>
   res.sendFile(path.join(__dirname, '../..', 'client/build/index.html'))
 );
 
-const httpsOptions = {
-  key: fs.readFileSync('./server/src/key.pem'),
-  cert: fs.readFileSync('./server/src/cert.pem'),
-};
-
 graphQLServer.listen(GRAPHQL_PORT, () =>
   console.log(`App listening on port ${GRAPHQL_PORT}!`)
 );
-
-// const server = https
-//   .createServer(httpsOptions, graphQLServer)
-//   .listen(GRAPHQL_PORT, () => {
-//     console.log(
-//       `GraphiQL is now running on http://localhost:${GRAPHQL_PORT}/graphiql\n` +
-//         `Oh, and Altair is running on http://localhost:${GRAPHQL_PORT}/altair`
-//     );
-//   });
