@@ -16,7 +16,6 @@ class Welcome extends Component {
   }
 
   render() {
-    console.log(this.props.isWelcoming);
     if (!this.props.isWelcoming) {
       return <Redirect to="/login" />;
     }
