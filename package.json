@@ -4,15 +4,15 @@
   "description": "",
   "main": "server/src/server.js",
   "scripts": {
-    "babel-node": "babel-node --ignore='client,node_modules'",
     "build": "babel server/src -d server/lib && cd client && npm run-script build",
     "build:server": "babel server/src -d server/lib",
     "build:client": "cd client && npm run-script build",
+    "build:watch": "babel server/src -d server/lib -w",
     "client": "node start-client.js",
-    "dev": "npm run babel-node -- server/src/server.js --inspect",
-    "develop": "nodemon --inspect --exec npm run babel-node -- server/src/server.js --source-maps",
-    "server": "babel-node server/src/server.js",
-    "start": "node server/lib/server.js"
+    "dev": "pm2 start server/lib/server.js --watch",
+    "develop": "npm run build:watch",
+    "start": "node server/lib/server.js",
+    "production": "pm2 start"
   },
   "author": "Josiah Nunemaker",
   "license": "MIT",
@@ -53,7 +53,8 @@
     "mysql": "^2.15.0",
     "mysql2": "^1.5.3",
     "nodemailer": "^4.6.7",
-    "npm": "^6.1.0"
+    "npm": "^6.1.0",
+    "pm2": "^3.0.3"
   },
   "babel": {
     "presets": [
