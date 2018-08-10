@@ -12,7 +12,7 @@
     "dev": "pm2 start server/lib/server.js --watch",
     "develop": "npm run build:watch",
     "start": "node server/lib/server.js",
-    "production": "pm2 start"
+    "production": "pm2 start --env production"
   },
   "author": "Josiah Nunemaker",
   "license": "MIT",
