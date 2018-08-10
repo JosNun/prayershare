@@ -53,6 +53,7 @@ import Login from './login/Login';
 import ForgotPassword from './reset/ForgotPassword';
 import ResetPassword from './reset/ResetPassword';
 import Welcome from './welcome/Welcome';
+import Contact from './contact/Contact';
 
 const client = new ApolloClient({
   // uri: process.env.GRAPHQL_ENDPOINT,
@@ -150,6 +151,7 @@ export default class App extends Component {
               <Route path="/signup" component={Signup} />
               <Route path="/login" component={Login} />
               <Route path="/about" component={About} />
+              <Route path="/contact" component={Contact} />
 
               <AuthRoute path="/feed" component={Feed} />
               <AuthRoute path="/partnered" component={PartneredFeed} />
