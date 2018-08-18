@@ -12,19 +12,20 @@
   // TODO: Fix logout bug
   // TODO: Clear cache on logout
   // TODO: Revise about text
+  // TODO: Contact page
   
-  TODO: Contact page
+  TODO: Rename files from .jsx to .js
+  TODO: Facebook Login
+  TODO: Facebook friend search
+  TODO: Load more on scroll
   TODO: Privacy policy / TOS
   TODO: Redirect to login on invalid JWT
-  TODO: Load more on scroll
   TODO: Loading animations
   TODO: Fix visual bug when unfollowing user
   TODO: Analytics
   TODO: Button animations
   TODO: Profile editing
   TODO: Cache user posts
-  TODO: Facebook Login
-  TODO: Facebook friend search
   TODO: Select which profile to use
   TODO: Invite friends button
   TODO: Animate ALL THE THINGS!
