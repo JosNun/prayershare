@@ -3,9 +3,12 @@ import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import AuthRoute from '../common/utils/AuthRoute';
 
+import './Feed.css';
+
 import CreatePost from '../common/CreatePost';
 import FeedCards from './FeedCards';
 import PrayerCard from '../common/PrayerCard/PrayerCard';
+import FeedEnd from '../assets/icons/end_of_feed.svg';
 
 export const GET_POSTS = gql`
   query getPostFeed($limit: Int, $offset: Int) {
@@ -79,13 +82,15 @@ export default class Feed extends Component {
                 return (
                   <React.Fragment>
                     <FeedCards>{posts}</FeedCards>
-                    {this.state.canFetchMore && (
+                    {this.state.canFetchMore ? (
                       <button
                         className="colored full-width"
                         onClick={() => this.loadMore(fetchMore, posts)}
                       >
                         Load More
                       </button>
+                    ) : (
+                      <FeedEnd className="Feed__end-icon" />
                     )}
                   </React.Fragment>
                 );
