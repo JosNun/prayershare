@@ -36,5 +36,5 @@
       "github:codebandits/react-app-rewire-svg-react-loader",
     "react-app-rewired": "^1.5.2"
   },
-  "proxy": "https://localhost:3001"
+  "proxy": "http://localhost:3001"
 }
