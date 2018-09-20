@@ -13,8 +13,10 @@
   // TODO: Clear cache on logout
   // TODO: Revise about text
   // TODO: Contact page
+  // TODO: Rename files from .jsx to .js
+  // TODO: Move JWT to cookies (Maybe)
   
-  TODO: Rename files from .jsx to .js
+  TODO: Desktop site
   TODO: Facebook Login
   TODO: Facebook friend search
   TODO: Load more on scroll
@@ -33,7 +35,6 @@
   TODO: Unfollow confirmation dialog
   
   
-  TODO: Move JWT to cookies (Maybe)
 */
 
 import React, { Component } from 'react';

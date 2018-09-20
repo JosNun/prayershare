@@ -56,6 +56,16 @@ input.colored {
   color: #fff;
 }
 
+/*****
+
+Helpers
+
+*****/
+
+.w-100 {
+  width: 100%;
+}
+
 .MainView {
   max-height: calc(100vh - 90px);
   overflow: scroll;
@@ -74,14 +84,13 @@ input.colored {
 
 .Modal__form > input {
   height: 15px;
-  
+
   margin: 5px;
   padding: 5px;
-  
+
   border: 2px solid #e1e1e1;
   border-radius: 10px;
 }
-
 
 .Modal__form input[type='submit'] {
   height: 30px;
@@ -97,4 +106,16 @@ input.colored {
   font-size: 12px;
   margin: 0;
   color: #e67373;
+}
+
+@media screen and (min-width: 450px) {
+  .MainView {
+    display: flex;
+    max-height: initial;
+
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px 20px 63px 20px;
+  }
 }

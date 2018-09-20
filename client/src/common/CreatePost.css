@@ -10,6 +10,8 @@ textarea.Create-Post-Modal__input {
   box-sizing: border-box;
   padding: 5px;
   margin-bottom: 10px;
+
+  font-size: 14px;
   resize: none;
 }
 

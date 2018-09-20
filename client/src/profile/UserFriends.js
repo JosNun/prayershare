@@ -191,7 +191,7 @@ class UserFriends extends Component {
           {client => {
             this.client = client;
             return (
-              <div>
+              <div className="w-100">
                 <FriendSearchCard
                   performSearch={this.searchUsers}
                   showFriends={this.getFriends}
